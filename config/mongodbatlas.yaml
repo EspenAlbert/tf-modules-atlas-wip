@@ -1,0 +1,18 @@
+provider_path: mongodb/mongodbatlas
+resources:
+- name: mongodbatlas_advanced_cluster
+  attribute_default_hcl_strings:
+    minimum_enabled_tls_protocol: '"TLS1_2"'
+    javascript_enabled: "false"
+    backup_enabled: "true"
+    retain_backups_enabled: "true"
+    termination_protection_enabled: "true"
+    default_write_concern: '"majority"'
+  required_variables:
+    - project_id
+    - name
+    - cluster_type
+    - replication_specs
+- name: mongodbatlas_project
+  include_id_field: true
+last_gen_sha: 872a56cc5a321f1710b599da4672820a91ca46b6

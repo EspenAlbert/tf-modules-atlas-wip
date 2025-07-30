@@ -1,0 +1,8 @@
+.venv
+cache
+static
+.vscode
+.windsurf
+.terraform
+.terraform.lock.hcl
+.env
