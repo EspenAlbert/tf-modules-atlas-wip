@@ -45,7 +45,7 @@ tf-modules-atlas-wip/
 
 1. **Clone the repository**:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/EspenAlbert/tf-modules-atlas-wip.git
    cd tf-modules-atlas-wip
    ```
 
