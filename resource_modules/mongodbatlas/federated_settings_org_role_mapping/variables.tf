@@ -1,19 +1,13 @@
 variable "external_group_name" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "federation_settings_id" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "org_id" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "role_assignments" {
@@ -22,6 +16,4 @@ variable "role_assignments" {
     org_id   = optional(string)
     roles    = optional(list(string))
   }))
-  nullable = true
-  default  = null
 }

@@ -1,11 +1,9 @@
-variable "enabled" {
-  type     = bool
-  nullable = true
-  default  = null
+variable "project_id" {
+  type = string
 }
 
-variable "project_id" {
-  type     = string
+variable "enabled" {
+  type     = bool
   nullable = true
   default  = null
 }

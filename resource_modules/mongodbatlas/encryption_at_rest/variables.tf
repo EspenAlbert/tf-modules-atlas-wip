@@ -1,13 +1,5 @@
-variable "enabled_for_search_nodes" {
-  type     = bool
-  nullable = true
-  default  = null
-}
-
 variable "project_id" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "aws_kms_config" {
@@ -37,6 +29,12 @@ variable "azure_key_vault_config" {
     subscription_id            = optional(string)
     tenant_id                  = optional(string)
   }))
+  nullable = true
+  default  = null
+}
+
+variable "enabled_for_search_nodes" {
+  type     = bool
   nullable = true
   default  = null
 }

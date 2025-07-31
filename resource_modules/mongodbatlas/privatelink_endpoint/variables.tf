@@ -1,19 +1,13 @@
 variable "project_id" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "provider_name" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "region" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "timeouts" {

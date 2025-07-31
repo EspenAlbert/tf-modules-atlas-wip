@@ -1,3 +1,7 @@
+variable "project_id" {
+  type = string
+}
+
 variable "customer_x509_cas" {
   type     = string
   nullable = true
@@ -6,12 +10,6 @@ variable "customer_x509_cas" {
 
 variable "months_until_expiration" {
   type     = number
-  nullable = true
-  default  = null
-}
-
-variable "project_id" {
-  type     = string
   nullable = true
   default  = null
 }

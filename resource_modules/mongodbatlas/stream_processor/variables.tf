@@ -1,7 +1,17 @@
 variable "instance_name" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
+}
+
+variable "pipeline" {
+  type = string
+}
+
+variable "processor_name" {
+  type = string
+}
+
+variable "project_id" {
+  type = string
 }
 
 variable "options" {
@@ -12,24 +22,6 @@ variable "options" {
       db              = string
     })
   })
-  nullable = true
-  default  = null
-}
-
-variable "pipeline" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "processor_name" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "project_id" {
-  type     = string
   nullable = true
   default  = null
 }

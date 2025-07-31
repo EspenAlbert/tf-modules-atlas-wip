@@ -1,3 +1,15 @@
+variable "federation_settings_id" {
+  type = string
+}
+
+variable "issuer_uri" {
+  type = string
+}
+
+variable "name" {
+  type = string
+}
+
 variable "associated_domains" {
   type     = list(string)
   nullable = true
@@ -28,12 +40,6 @@ variable "description" {
   default  = null
 }
 
-variable "federation_settings_id" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
 variable "groups_claim" {
   type     = string
   nullable = true
@@ -41,18 +47,6 @@ variable "groups_claim" {
 }
 
 variable "idp_type" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "issuer_uri" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "name" {
   type     = string
   nullable = true
   default  = null

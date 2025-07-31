@@ -1,3 +1,11 @@
+variable "name" {
+  type = string
+}
+
+variable "org_id" {
+  type = string
+}
+
 variable "is_collect_database_specifics_statistics_enabled" {
   type     = bool
   nullable = true
@@ -34,14 +42,11 @@ variable "is_schema_advisor_enabled" {
   default  = null
 }
 
-variable "name" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "org_id" {
-  type     = string
+variable "limits" {
+  type = set(object({
+    name  = string
+    value = number
+  }))
   nullable = true
   default  = null
 }
@@ -64,26 +69,17 @@ variable "tags" {
   default  = null
 }
 
-variable "with_default_alerts_settings" {
-  type     = bool
-  nullable = true
-  default  = null
-}
-
-variable "limits" {
-  type = set(object({
-    name  = string
-    value = number
-  }))
-  nullable = true
-  default  = null
-}
-
 variable "teams" {
   type = set(object({
     role_names = list(string)
     team_id    = string
   }))
+  nullable = true
+  default  = null
+}
+
+variable "with_default_alerts_settings" {
+  type     = bool
   nullable = true
   default  = null
 }

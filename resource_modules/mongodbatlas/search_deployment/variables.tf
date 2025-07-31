@@ -1,7 +1,16 @@
 variable "cluster_name" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
+}
+
+variable "project_id" {
+  type = string
+}
+
+variable "specs" {
+  type = list(object({
+    instance_size = string
+    node_count    = number
+  }))
 }
 
 variable "delete_on_create_timeout" {
@@ -10,23 +19,8 @@ variable "delete_on_create_timeout" {
   default  = null
 }
 
-variable "project_id" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
 variable "skip_wait_on_update" {
   type     = bool
-  nullable = true
-  default  = null
-}
-
-variable "specs" {
-  type = list(object({
-    instance_size = string
-    node_count    = number
-  }))
   nullable = true
   default  = null
 }

@@ -1,22 +1,16 @@
 variable "bucket_name" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "cloud_provider" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "iam_role_id" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "project_id" {
+  type = string
+}
+
+variable "iam_role_id" {
   type     = string
   nullable = true
   default  = null

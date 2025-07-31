@@ -1,3 +1,15 @@
+variable "project_id" {
+  type = string
+}
+
+variable "provider_name" {
+  type = string
+}
+
+variable "vendor" {
+  type = string
+}
+
 variable "arn" {
   type     = string
   nullable = true
@@ -16,18 +28,6 @@ variable "dns_sub_domain" {
   default  = null
 }
 
-variable "project_id" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "provider_name" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
 variable "region" {
   type     = string
   nullable = true
@@ -35,12 +35,6 @@ variable "region" {
 }
 
 variable "service_endpoint_id" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "vendor" {
   type     = string
   nullable = true
   default  = null

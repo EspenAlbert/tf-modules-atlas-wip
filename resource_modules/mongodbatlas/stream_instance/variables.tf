@@ -3,20 +3,14 @@ variable "data_process_region" {
     cloud_provider = string
     region         = string
   })
-  nullable = true
-  default  = null
 }
 
 variable "instance_name" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "project_id" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "stream_config" {

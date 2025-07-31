@@ -1,7 +1,9 @@
 variable "api_key_id" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
+}
+
+variable "org_id" {
+  type = string
 }
 
 variable "cidr_block" {
@@ -11,12 +13,6 @@ variable "cidr_block" {
 }
 
 variable "ip_address" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "org_id" {
   type     = string
   nullable = true
   default  = null

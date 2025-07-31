@@ -1,3 +1,11 @@
+variable "day_of_week" {
+  type = number
+}
+
+variable "project_id" {
+  type = string
+}
+
 variable "auto_defer" {
   type     = bool
   nullable = true
@@ -6,12 +14,6 @@ variable "auto_defer" {
 
 variable "auto_defer_once_enabled" {
   type     = bool
-  nullable = true
-  default  = null
-}
-
-variable "day_of_week" {
-  type     = number
   nullable = true
   default  = null
 }
@@ -28,23 +30,17 @@ variable "hour_of_day" {
   default  = null
 }
 
-variable "project_id" {
-  type     = string
+variable "protected_hours" {
+  type = list(object({
+    end_hour_of_day   = number
+    start_hour_of_day = number
+  }))
   nullable = true
   default  = null
 }
 
 variable "start_asap" {
   type     = bool
-  nullable = true
-  default  = null
-}
-
-variable "protected_hours" {
-  type = list(object({
-    end_hour_of_day   = number
-    start_hour_of_day = number
-  }))
   nullable = true
   default  = null
 }

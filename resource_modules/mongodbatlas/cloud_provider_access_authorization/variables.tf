@@ -1,13 +1,9 @@
 variable "project_id" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "role_id" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "aws" {

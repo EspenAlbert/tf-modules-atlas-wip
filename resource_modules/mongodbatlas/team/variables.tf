@@ -1,17 +1,11 @@
 variable "name" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "org_id" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "usernames" {
-  type     = list(string)
-  nullable = true
-  default  = null
+  type = list(string)
 }

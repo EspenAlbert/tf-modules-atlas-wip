@@ -1,13 +1,9 @@
 variable "project_id" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "provider_name" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "azure_config" {

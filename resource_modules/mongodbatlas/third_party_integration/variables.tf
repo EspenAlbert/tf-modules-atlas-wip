@@ -1,3 +1,11 @@
+variable "project_id" {
+  type = string
+}
+
+variable "type" {
+  type = string
+}
+
 variable "api_key" {
   type     = string
   nullable = true
@@ -23,12 +31,6 @@ variable "microsoft_teams_webhook_url" {
 }
 
 variable "password" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "project_id" {
   type     = string
   nullable = true
   default  = null
@@ -77,12 +79,6 @@ variable "service_key" {
 }
 
 variable "team_name" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "type" {
   type     = string
   nullable = true
   default  = null

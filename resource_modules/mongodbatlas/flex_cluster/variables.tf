@@ -1,13 +1,9 @@
 variable "name" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "project_id" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "provider_settings" {
@@ -15,8 +11,6 @@ variable "provider_settings" {
     backing_provider_name = string
     region_name           = string
   })
-  nullable = true
-  default  = null
 }
 
 variable "tags" {

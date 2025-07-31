@@ -1,3 +1,23 @@
+variable "cluster_name" {
+  type = string
+}
+
+variable "collection_name" {
+  type = string
+}
+
+variable "database" {
+  type = string
+}
+
+variable "name" {
+  type = string
+}
+
+variable "project_id" {
+  type = string
+}
+
 variable "analyzer" {
   type     = string
   nullable = true
@@ -5,24 +25,6 @@ variable "analyzer" {
 }
 
 variable "analyzers" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "cluster_name" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "collection_name" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "database" {
   type     = string
   nullable = true
   default  = null
@@ -46,18 +48,6 @@ variable "mappings_fields" {
   default  = null
 }
 
-variable "name" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "project_id" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
 variable "search_analyzer" {
   type     = string
   nullable = true
@@ -66,18 +56,6 @@ variable "search_analyzer" {
 
 variable "stored_source" {
   type     = string
-  nullable = true
-  default  = null
-}
-
-variable "type" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "wait_for_index_build_completion" {
-  type     = bool
   nullable = true
   default  = null
 }
@@ -98,6 +76,18 @@ variable "timeouts" {
     delete = optional(string)
     update = optional(string)
   })
+  nullable = true
+  default  = null
+}
+
+variable "type" {
+  type     = string
+  nullable = true
+  default  = null
+}
+
+variable "wait_for_index_build_completion" {
+  type     = bool
   nullable = true
   default  = null
 }

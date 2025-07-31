@@ -1,7 +1,13 @@
 variable "auth_database_name" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
+}
+
+variable "project_id" {
+  type = string
+}
+
+variable "username" {
+  type = string
 }
 
 variable "aws_iam_type" {
@@ -12,6 +18,15 @@ variable "aws_iam_type" {
 
 variable "description" {
   type     = string
+  nullable = true
+  default  = null
+}
+
+variable "labels" {
+  type = set(object({
+    key   = optional(string)
+    value = optional(string)
+  }))
   nullable = true
   default  = null
 }
@@ -34,33 +49,6 @@ variable "password" {
   default  = null
 }
 
-variable "project_id" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "username" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "x509_type" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "labels" {
-  type = set(object({
-    key   = optional(string)
-    value = optional(string)
-  }))
-  nullable = true
-  default  = null
-}
-
 variable "roles" {
   type = set(object({
     collection_name = optional(string)
@@ -76,6 +64,12 @@ variable "scopes" {
     name = optional(string)
     type = optional(string)
   }))
+  nullable = true
+  default  = null
+}
+
+variable "x509_type" {
+  type     = string
   nullable = true
   default  = null
 }

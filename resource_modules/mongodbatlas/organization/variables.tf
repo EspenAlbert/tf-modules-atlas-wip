@@ -1,11 +1,21 @@
-variable "api_access_list_required" {
-  type     = bool
-  nullable = true
-  default  = null
+variable "description" {
+  type = string
 }
 
-variable "description" {
-  type     = string
+variable "name" {
+  type = string
+}
+
+variable "org_owner_id" {
+  type = string
+}
+
+variable "role_names" {
+  type = list(string)
+}
+
+variable "api_access_list_required" {
+  type     = bool
   nullable = true
   default  = null
 }
@@ -28,26 +38,8 @@ variable "multi_factor_auth_required" {
   default  = null
 }
 
-variable "name" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "org_owner_id" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
 variable "restrict_employee_access" {
   type     = bool
-  nullable = true
-  default  = null
-}
-
-variable "role_names" {
-  type     = list(string)
   nullable = true
   default  = null
 }

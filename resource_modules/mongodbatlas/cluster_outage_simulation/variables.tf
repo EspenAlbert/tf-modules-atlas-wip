@@ -1,13 +1,5 @@
 variable "cluster_name" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "project_id" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "outage_filters" {
@@ -15,8 +7,10 @@ variable "outage_filters" {
     cloud_provider = string
     region_name    = string
   }))
-  nullable = true
-  default  = null
+}
+
+variable "project_id" {
+  type = string
 }
 
 variable "timeouts" {

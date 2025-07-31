@@ -1,43 +1,9 @@
 variable "cluster_name" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "coll_name" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "collection_type" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "db_name" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "paused" {
-  type     = bool
-  nullable = true
-  default  = null
-}
-
-variable "project_id" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "sync_creation" {
-  type     = bool
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "criteria" {
@@ -48,6 +14,18 @@ variable "criteria" {
     query             = optional(string)
     type              = string
   }))
+}
+
+variable "db_name" {
+  type = string
+}
+
+variable "project_id" {
+  type = string
+}
+
+variable "collection_type" {
+  type     = string
   nullable = true
   default  = null
 }
@@ -78,6 +56,12 @@ variable "partition_fields" {
   default  = null
 }
 
+variable "paused" {
+  type     = bool
+  nullable = true
+  default  = null
+}
+
 variable "schedule" {
   type = list(object({
     day_of_month = optional(number)
@@ -88,6 +72,12 @@ variable "schedule" {
     start_minute = optional(number)
     type         = string
   }))
+  nullable = true
+  default  = null
+}
+
+variable "sync_creation" {
+  type     = bool
   nullable = true
   default  = null
 }

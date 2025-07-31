@@ -1,3 +1,7 @@
+variable "project_id" {
+  type = string
+}
+
 variable "aws_security_group" {
   type     = string
   nullable = true
@@ -17,12 +21,6 @@ variable "comment" {
 }
 
 variable "ip_address" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "project_id" {
   type     = string
   nullable = true
   default  = null

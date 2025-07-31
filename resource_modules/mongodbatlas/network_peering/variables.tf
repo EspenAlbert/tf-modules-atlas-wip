@@ -1,3 +1,15 @@
+variable "container_id" {
+  type = string
+}
+
+variable "project_id" {
+  type = string
+}
+
+variable "provider_name" {
+  type = string
+}
+
 variable "accepter_region_name" {
   type     = string
   nullable = true
@@ -40,12 +52,6 @@ variable "azure_subscription_id" {
   default  = null
 }
 
-variable "container_id" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
 variable "gcp_project_id" {
   type     = string
   nullable = true
@@ -53,18 +59,6 @@ variable "gcp_project_id" {
 }
 
 variable "network_name" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "project_id" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "provider_name" {
   type     = string
   nullable = true
   default  = null

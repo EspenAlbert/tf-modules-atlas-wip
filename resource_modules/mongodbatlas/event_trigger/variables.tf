@@ -1,7 +1,17 @@
 variable "app_id" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
+}
+
+variable "name" {
+  type = string
+}
+
+variable "project_id" {
+  type = string
+}
+
+variable "type" {
+  type = string
 }
 
 variable "config_collection" {
@@ -76,36 +86,6 @@ variable "disabled" {
   default  = null
 }
 
-variable "function_id" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "name" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "project_id" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "type" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "unordered" {
-  type     = bool
-  nullable = true
-  default  = null
-}
-
 variable "event_processors" {
   type = list(object({
     aws_eventbridge = optional(list(object({
@@ -113,6 +93,18 @@ variable "event_processors" {
       config_region     = optional(string)
     })))
   }))
+  nullable = true
+  default  = null
+}
+
+variable "function_id" {
+  type     = string
+  nullable = true
+  default  = null
+}
+
+variable "unordered" {
+  type     = bool
   nullable = true
   default  = null
 }

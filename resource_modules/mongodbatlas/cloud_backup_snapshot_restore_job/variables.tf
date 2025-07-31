@@ -1,19 +1,9 @@
 variable "cluster_name" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "project_id" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "snapshot_id" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "delivery_type_config" {
@@ -27,6 +17,12 @@ variable "delivery_type_config" {
     target_cluster_name       = optional(string)
     target_project_id         = optional(string)
   }))
+  nullable = true
+  default  = null
+}
+
+variable "snapshot_id" {
+  type     = string
   nullable = true
   default  = null
 }

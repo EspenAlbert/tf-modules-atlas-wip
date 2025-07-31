@@ -1,23 +1,17 @@
 variable "org_id" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "roles" {
-  type     = list(string)
-  nullable = true
-  default  = null
+  type = list(string)
+}
+
+variable "username" {
+  type = string
 }
 
 variable "teams_ids" {
   type     = list(string)
-  nullable = true
-  default  = null
-}
-
-variable "username" {
-  type     = string
   nullable = true
   default  = null
 }

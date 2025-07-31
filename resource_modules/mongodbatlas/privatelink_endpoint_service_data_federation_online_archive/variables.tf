@@ -1,3 +1,15 @@
+variable "endpoint_id" {
+  type = string
+}
+
+variable "project_id" {
+  type = string
+}
+
+variable "provider_name" {
+  type = string
+}
+
 variable "comment" {
   type     = string
   nullable = true
@@ -5,24 +17,6 @@ variable "comment" {
 }
 
 variable "customer_endpoint_dns_name" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "endpoint_id" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "project_id" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "provider_name" {
   type     = string
   nullable = true
   default  = null

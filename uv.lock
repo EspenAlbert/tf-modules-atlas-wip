@@ -41,7 +41,7 @@ wheels = [
 
 [[package]]
 name = "atlas-init"
-version = "0.8.0"
+version = "0.8.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "appdirs" },
@@ -66,9 +66,9 @@ dependencies = [
     { name = "typer" },
     { name = "zero-3rdparty" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a8/74/19c01df4011a201467fdc7119d3638238594d005dfad2ca83a4a6c5fa023/atlas_init-0.8.0.tar.gz", hash = "sha256:f9cb58c56b7e31282c321d00dda384d6b82f5e0f5bd9cfc80cd9880bf8fc1bbd", size = 175946, upload-time = "2025-07-30T11:43:43.213Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/cb/aa/1a1592dd6eccef73c78188976d74dd94d2ae609b9221586c6eb3db355e93/atlas_init-0.8.1.tar.gz", hash = "sha256:b2ed0f49626d6a0e1c1fd38946e10308713560fe71b4f8852121b73508123053", size = 176004, upload-time = "2025-07-31T07:38:03.008Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/94/8e/f241056b420ef59808110899a15c766ce482fba68b5c186b8a519690fc45/atlas_init-0.8.0-py3-none-any.whl", hash = "sha256:e41f4654b9747322810bac1e299f6a2f495cb9cee7c2d0f6e3fd5f593eee8c80", size = 238077, upload-time = "2025-07-30T11:43:41.647Z" },
+    { url = "https://files.pythonhosted.org/packages/a3/84/dbc169d4a5a2e308ba9798ffe814f43467e26d63435b6729b6128d9751c0/atlas_init-0.8.1-py3-none-any.whl", hash = "sha256:35e6990b29aa212662b74e5fa80b98ef9c28ac5467aed3ab5e38275eb76e2e94", size = 238156, upload-time = "2025-07-31T07:38:01.754Z" },
 ]
 
 [[package]]
@@ -956,7 +956,7 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "atlas-init", specifier = "==0.8.0" }]
+requires-dist = [{ name = "atlas-init", specifier = "==0.8.1" }]
 
 [package.metadata.requires-dev]
 dev = [

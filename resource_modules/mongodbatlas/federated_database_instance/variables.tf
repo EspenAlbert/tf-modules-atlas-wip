@@ -1,13 +1,9 @@
 variable "name" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "project_id" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "cloud_provider_config" {

@@ -1,17 +1,13 @@
-variable "enabled" {
-  type     = bool
-  nullable = true
-  default  = null
-}
-
 variable "event_type" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "project_id" {
-  type     = string
+  type = string
+}
+
+variable "enabled" {
+  type     = bool
   nullable = true
   default  = null
 }

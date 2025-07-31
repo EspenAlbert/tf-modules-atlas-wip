@@ -1,19 +1,17 @@
 variable "authorized_email" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "authorized_user_first_name" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "authorized_user_last_name" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
+}
+
+variable "project_id" {
+  type = string
 }
 
 variable "copy_protection_enabled" {
@@ -28,29 +26,17 @@ variable "encryption_at_rest_enabled" {
   default  = null
 }
 
-variable "pit_enabled" {
-  type     = bool
-  nullable = true
-  default  = null
-}
-
-variable "project_id" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "restore_window_days" {
-  type     = number
-  nullable = true
-  default  = null
-}
-
 variable "on_demand_policy_item" {
   type = list(object({
     frequency_interval = number
     retention_value    = number
   }))
+  nullable = true
+  default  = null
+}
+
+variable "pit_enabled" {
+  type     = bool
   nullable = true
   default  = null
 }
@@ -100,6 +86,12 @@ variable "policy_item_yearly" {
     frequency_interval = number
     retention_value    = number
   }))
+  nullable = true
+  default  = null
+}
+
+variable "restore_window_days" {
+  type     = number
   nullable = true
   default  = null
 }

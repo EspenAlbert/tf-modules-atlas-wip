@@ -1,46 +1,12 @@
-variable "auto_export_enabled" {
-  type     = bool
-  nullable = true
-  default  = null
-}
-
 variable "cluster_name" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "project_id" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
-variable "reference_hour_of_day" {
-  type     = number
-  nullable = true
-  default  = null
-}
-
-variable "reference_minute_of_hour" {
-  type     = number
-  nullable = true
-  default  = null
-}
-
-variable "restore_window_days" {
-  type     = number
-  nullable = true
-  default  = null
-}
-
-variable "update_snapshots" {
-  type     = bool
-  nullable = true
-  default  = null
-}
-
-variable "use_org_and_group_names_in_export_prefix" {
+variable "auto_export_enabled" {
   type     = bool
   nullable = true
   default  = null
@@ -113,6 +79,36 @@ variable "policy_item_yearly" {
     retention_unit     = string
     retention_value    = number
   }))
+  nullable = true
+  default  = null
+}
+
+variable "reference_hour_of_day" {
+  type     = number
+  nullable = true
+  default  = null
+}
+
+variable "reference_minute_of_hour" {
+  type     = number
+  nullable = true
+  default  = null
+}
+
+variable "restore_window_days" {
+  type     = number
+  nullable = true
+  default  = null
+}
+
+variable "update_snapshots" {
+  type     = bool
+  nullable = true
+  default  = null
+}
+
+variable "use_org_and_group_names_in_export_prefix" {
+  type     = bool
   nullable = true
   default  = null
 }

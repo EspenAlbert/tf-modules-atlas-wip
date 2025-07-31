@@ -1,25 +1,17 @@
 variable "cluster_name" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "export_bucket_id" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "project_id" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "snapshot_id" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "custom_data" {

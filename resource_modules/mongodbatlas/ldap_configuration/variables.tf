@@ -1,7 +1,21 @@
 variable "authentication_enabled" {
-  type     = bool
-  nullable = true
-  default  = null
+  type = bool
+}
+
+variable "bind_password" {
+  type = string
+}
+
+variable "bind_username" {
+  type = string
+}
+
+variable "hostname" {
+  type = string
+}
+
+variable "project_id" {
+  type = string
 }
 
 variable "authorization_enabled" {
@@ -16,25 +30,7 @@ variable "authz_query_template" {
   default  = null
 }
 
-variable "bind_password" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "bind_username" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
 variable "ca_certificate" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
-variable "hostname" {
   type     = string
   nullable = true
   default  = null
@@ -42,12 +38,6 @@ variable "hostname" {
 
 variable "port" {
   type     = number
-  nullable = true
-  default  = null
-}
-
-variable "project_id" {
-  type     = string
   nullable = true
   default  = null
 }

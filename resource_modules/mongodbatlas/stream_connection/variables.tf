@@ -1,3 +1,19 @@
+variable "connection_name" {
+  type = string
+}
+
+variable "instance_name" {
+  type = string
+}
+
+variable "project_id" {
+  type = string
+}
+
+variable "type" {
+  type = string
+}
+
 variable "authentication" {
   type = object({
     mechanism = optional(string)
@@ -40,12 +56,6 @@ variable "config" {
   default  = null
 }
 
-variable "connection_name" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
 variable "db_role_to_execute" {
   type = object({
     role = string
@@ -61,12 +71,6 @@ variable "headers" {
   default  = null
 }
 
-variable "instance_name" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
 variable "networking" {
   type = object({
     access = object({
@@ -78,23 +82,11 @@ variable "networking" {
   default  = null
 }
 
-variable "project_id" {
-  type     = string
-  nullable = true
-  default  = null
-}
-
 variable "security" {
   type = object({
     broker_public_certificate = optional(string)
     protocol                  = optional(string)
   })
-  nullable = true
-  default  = null
-}
-
-variable "type" {
-  type     = string
   nullable = true
   default  = null
 }

@@ -1,7 +1,5 @@
 variable "description" {
-  type     = string
-  nullable = true
-  default  = null
+  type = string
 }
 
 variable "project_assignment" {
@@ -9,6 +7,4 @@ variable "project_assignment" {
     project_id = string
     role_names = list(string)
   }))
-  nullable = true
-  default  = null
 }
