@@ -146,5 +146,5 @@ resources:
 ## 🔗 Related Projects
 
 - [MongoDB Atlas Terraform Provider](https://registry.terraform.io/providers/mongodb/mongodbatlas/latest)
-- [atlas-init](../atlas-init) - Core initialization tooling
+- [atlas-init](https://github.com/EspenAlbert/atlas-init) - Core initialization tooling
 - [MongoDB Atlas Documentation](https://docs.atlas.mongodb.com/)
