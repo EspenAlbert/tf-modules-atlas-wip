@@ -23,3 +23,8 @@ output "aws_kms_key_id" {
 output "aws_iam_role_arn" {
   value = local.aws_iam_role_arn
 }
+
+
+output "atlas_private_endpoint_encryption_at_rest_id" {
+  value = try(one(mongodbatlas_encryption_at_rest_private_endpoint.this).id, null)
+}
