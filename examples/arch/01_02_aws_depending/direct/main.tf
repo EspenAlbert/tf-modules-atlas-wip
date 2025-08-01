@@ -1,5 +1,5 @@
 resource "mongodbatlas_cloud_provider_access_setup" "this" {
-  project_id = var.atlas_project_id
+  project_id    = var.atlas_project_id
   provider_name = "AWS"
 }
 
@@ -27,17 +27,5 @@ resource "mongodbatlas_encryption_at_rest" "this" {
     customer_master_key_id = aws_kms_key.this.id
     region                 = var.atlas_region
     role_id                = mongodbatlas_cloud_provider_access_authorization.this.role_id
-  }
-}
-
-
-resource "mongodbatlas_privatelink_endpoint" "this" {
-  project_id = var.atlas_project_id
-  provider_name = "AWS"
-  region        = var.atlas_region
-
-  timeouts {
-    create = "30m"
-    delete = "20m"
   }
 }

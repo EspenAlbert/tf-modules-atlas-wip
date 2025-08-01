@@ -8,7 +8,14 @@ locals {
     "Email"    = "marissa@acme.com"
   }
   clusterWithAlertsName = "ClusterPortalProd"
-  audit_filter_json = "{ 'atype': 'authenticate', 'param': {   'user': 'auditAdmin',   'db': 'admin',   'mechanism': 'SCRAM-SHA-1' }}"
+  audit_filter_json = jsonencode({
+    atype = "authenticate"
+    param = {
+      user      = "auditAdmin"
+      db        = "admin"
+      mechanism = "SCRAM-SHA-1"
+    }
+  })
 }
 
 module "atlas_project" {
@@ -20,7 +27,7 @@ module "atlas_project" {
     audit_filter                = local.audit_filter_json
   }
   auditing_enabled = true
-  tags = local.tags
+  tags             = local.tags
 }
 
 module "atlas_cluster" {
@@ -51,9 +58,9 @@ module "automated_backup_test_cluster" {
     "cluster_1" = { name = "m10-aws-1e", region = "US_EAST_1" },
     "cluster_2" = { name = "m10-aws-2e", region = "US_EAST_2" },
   }
-  project_id = module.atlas_project.id
-  name = each.value.name
-  cluster_type = "REPLICASET"
+  project_id             = module.atlas_project.id
+  name                   = each.value.name
+  cluster_type           = "REPLICASET"
   mongo_db_major_version = var.mongodb_version
 
   replication_specs = [{
@@ -78,26 +85,26 @@ module "automated_backup_test_cluster" {
 }
 
 module "alert_configuration" {
-  source = "../../../../modules/03_alert_configuration"
+  source     = "../../../../modules/03_alert_configuration"
   project_id = module.atlas_project.id
   event_type = "REPLICATION_OPLOG_WINDOW_RUNNING_OUT"
-  enabled = true
+  enabled    = true
   matcher = {
     field_name = "CLUSTER_NAME"
     operator   = "EQUALS"
     value      = local.clusterWithAlertsName
   }
   notification = {
-    type_name = "GROUP"
-    interval_min = 5
-    delay_min = 1
-    sms_enabled = false
+    type_name     = "GROUP"
+    interval_min  = 5
+    delay_min     = 1
+    sms_enabled   = false
     email_enabled = true
-    roles = ["GROUP_CLUSTER_MANAGER"]
+    roles         = ["GROUP_CLUSTER_MANAGER"]
   }
   threshold_config = {
-    operator = "LESS_THAN"
+    operator  = "LESS_THAN"
     threshold = 1
-    units = "HOURS"
+    units     = "HOURS"
   }
 }

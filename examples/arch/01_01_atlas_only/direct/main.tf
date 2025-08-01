@@ -10,18 +10,25 @@ locals {
     "Email"    = "marissa@acme.com"
   }
   clusterWithAlertsName = "ClusterPortalProd"
-  audit_filter_json = "{ 'atype': 'authenticate', 'param': {   'user': 'auditAdmin',   'db': 'admin',   'mechanism': 'SCRAM-SHA-1' }}"
+  audit_filter_json = jsonencode({
+    atype = "authenticate"
+    param = {
+      user      = "auditAdmin"
+      db        = "admin"
+      mechanism = "SCRAM-SHA-1"
+    }
+  })
 }
 
 # Create a Project
-resource "mongodbatlas_project" "atlas-project" {
+resource "mongodbatlas_project" "atlas_project" {
   org_id = var.atlas_org_id
   name   = var.atlas_project_name
 }
 
 # Create an Atlas Advanced Cluster
-resource "mongodbatlas_advanced_cluster" "atlas-cluster" {
-  project_id             = mongodbatlas_project.atlas-project.id
+resource "mongodbatlas_advanced_cluster" "atlas_cluster" {
+  project_id             = mongodbatlas_project.atlas_project.id
   name                   = local.clusterWithAlertsName
   cluster_type           = "REPLICASET"
   mongo_db_major_version = var.mongodb_version
@@ -42,7 +49,7 @@ resource "mongodbatlas_advanced_cluster" "atlas-cluster" {
 
 # Set up an alert notification when REPLICATION_OPLOG_WINDOW_RUNNING_OUT is greater than 1 hour for more than 5 minutes
 resource "mongodbatlas_alert_configuration" "test_replication_lag_alert" {
-  project_id = mongodbatlas_project.atlas-project.id
+  project_id = mongodbatlas_project.atlas_project.id
   event_type = "REPLICATION_OPLOG_WINDOW_RUNNING_OUT"
   enabled    = true
 
@@ -62,15 +69,15 @@ resource "mongodbatlas_alert_configuration" "test_replication_lag_alert" {
   }
 
   threshold_config {
-    operator    = "LESS_THAN"
-    threshold   = 1
-    units       = "HOURS"
+    operator  = "LESS_THAN"
+    threshold = 1
+    units     = "HOURS"
   }
 }
 
 # Enable auditing and create an audit filter for your cluster
 resource "mongodbatlas_auditing" "test" {
-  project_id                  = mongodbatlas_project.atlas-project.id
+  project_id                  = mongodbatlas_project.atlas_project.id
   audit_filter                = local.audit_filter_json
   audit_authorization_success = false
   enabled                     = true
@@ -86,7 +93,7 @@ locals {
 
 resource "mongodbatlas_advanced_cluster" "automated_backup_test_cluster" {
   for_each     = local.atlas_clusters
-  project_id   = mongodbatlas_project.atlas-project.id
+  project_id   = mongodbatlas_project.atlas_project.id
   name         = each.value.name
   cluster_type = "REPLICASET"
 
@@ -113,7 +120,7 @@ resource "mongodbatlas_advanced_cluster" "automated_backup_test_cluster" {
 
 resource "mongodbatlas_cloud_backup_schedule" "test" {
   for_each                 = local.atlas_clusters
-  project_id               = mongodbatlas_project.atlas-project.id
+  project_id               = mongodbatlas_project.atlas_project.id
   cluster_name             = mongodbatlas_advanced_cluster.automated_backup_test_cluster[each.key].name
   reference_hour_of_day    = 3
   reference_minute_of_hour = 45

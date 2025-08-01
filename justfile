@@ -30,6 +30,8 @@ resource-module name:
 tflint:
   cd resource_modules && tflint -f compact --recursive --minimum-failure-severity=warning
 
+fmt:
+  terraform fmt -recursive ./examples
 [positional-arguments]
 tf-ext *args:
   uv run tf-ext {{args}}
