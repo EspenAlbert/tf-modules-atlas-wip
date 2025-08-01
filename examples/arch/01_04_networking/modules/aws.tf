@@ -1,7 +1,8 @@
 
 locals {
-  azs        = slice(data.aws_availability_zones.available.names, 0, 3)
-  aws_region = replace(lower(var.atlas_region), "_", "-")
+  subnet_count = 3
+  azs          = slice(data.aws_availability_zones.available.names, 0, local.subnet_count)
+  aws_region   = replace(lower(var.atlas_region), "_", "-")
 
 }
 provider "aws" {
@@ -19,7 +20,7 @@ module "vpc" {
   manage_default_network_acl    = false
 
   azs             = local.azs
-  private_subnets = [for k, v in local.azs : cidrsubnet(var.vpc_cidr, 4, k)]
+  private_subnets = [for k, v in local.azs : cidrsubnet(var.vpc_cidr, local.subnet_count, k)]
 
   tags = merge({
     Name = var.vpc_name

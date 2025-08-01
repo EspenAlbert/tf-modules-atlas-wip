@@ -31,11 +31,17 @@ resource "mongodbatlas_privatelink_endpoint_service" "private_endpoint" {
   provider_name       = "AWS"
 }
 
-resource "mongodbatlas_project_ip_access_list" "access_list_private_endpoints" {
-  for_each           = local.use_aws_private_endpoint ? var.aws_private_endpoint.security_group_ids : toset([])
-  project_id         = var.project_id
-  aws_security_group = each.value
+data "aws_vpc" "this" {
+  count = local.use_aws_private_endpoint ? 1 : 0
+  id    = var.aws_private_endpoint.vpc_id
+}
 
-  comment = "Allow access to Atlas from AWS Security Group due to Private Endpoint in ${local.aws_region} for vpc_id ${var.aws_private_endpoint.vpc_id}"
+resource "mongodbatlas_project_ip_access_list" "access_list_private_endpoints" {
+  count = local.use_aws_private_endpoint && var.aws_private_endpoint.add_cidr_block_project_access ? 1 : 0
+
+  project_id = var.project_id
+  cidr_block = data.aws_vpc.this[0].cidr_block
+
+  comment = substr("Access to Atlas from the Private Endpoint in ${local.aws_region} for vpc ${one(data.aws_vpc.this).id}", 0, 80) # MAX 80 chars
 
 }
