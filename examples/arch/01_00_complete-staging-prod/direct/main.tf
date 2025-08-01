@@ -3,14 +3,14 @@
 # Create a Project
 resource "mongodbatlas_project" "atlas-project" {
   org_id = var.atlas_org_id
-  name = var.atlas_project_name
+  name   = var.atlas_project_name
 }
 
 # Create an Atlas Advanced Cluster
 resource "mongodbatlas_advanced_cluster" "atlas-cluster" {
-  project_id = mongodbatlas_project.atlas-project.id
-  name = "ClusterPortalProd"
-  cluster_type = "REPLICASET"
+  project_id             = mongodbatlas_project.atlas-project.id
+  name                   = "ClusterPortalProd"
+  cluster_type           = "REPLICASET"
   mongo_db_major_version = var.mongodb_version
 
   replication_specs {
@@ -52,7 +52,7 @@ resource "mongodbatlas_advanced_cluster" "atlas-cluster" {
 
 # Outputs to Display
 output "atlas_cluster_connection_string" { value = mongodbatlas_advanced_cluster.atlas-cluster.connection_strings.0.standard_srv }
-output "project_name"      { value = mongodbatlas_project.atlas-project.name }
+output "project_name" { value = mongodbatlas_project.atlas-project.name }
 
 # Set up an alert notification by email when there is replication lag
 # Greater than 1 hour for more than 5 minutes
@@ -86,7 +86,7 @@ resource "mongodbatlas_alert_configuration" "test_replication_lag_alert" {
 
 # Atlas organization details to use in the configuration
 data "mongodbatlas_federated_settings" "this" {
-	  org_id = mongodbatlas_project.atlas-project.org_id
+  org_id = mongodbatlas_project.atlas-project.org_id
 }
 
 # Configure an identity provider for federated authentication
@@ -139,26 +139,26 @@ resource "mongodbatlas_custom_db_role" "create_role" {
   actions {
     action = "UPDATE"
     resources {
-      database_name   = "myDb"
+      database_name = "myDb"
     }
   }
   actions {
     action = "INSERT"
     resources {
-      database_name   = "myDb"
+      database_name = "myDb"
     }
   }
   actions {
     action = "REMOVE"
     resources {
-      database_name   = "myDb"
+      database_name = "myDb"
     }
   }
 }
 
 # AWS ONLY- remove for other cloud providers: Create a Private Link
 resource "mongodbatlas_privatelink_endpoint" "test" {
-  project_id = mongodbatlas_project.atlas-project.id
+  project_id    = mongodbatlas_project.atlas-project.id
   provider_name = "AWS"
   region        = "US_EAST_1"
 
@@ -182,7 +182,7 @@ resource "mongodbatlas_privatelink_endpoint" "test" {
 
 # AWS ONLY- remove for other cloud providers: Enable BYOK encryption
 resource "mongodbatlas_cloud_provider_access_setup" "setup_only" {
-  project_id = mongodbatlas_project.atlas-project.id
+  project_id    = mongodbatlas_project.atlas-project.id
   provider_name = "AWS"
 }
 
@@ -255,15 +255,15 @@ data "mongodbatlas_encryption_at_rest" "test" {
 
 # Enable auditing and create an audit filter for your cluster
 resource "mongodbatlas_auditing" "test" {
-     project_id = mongodbatlas_project.atlas-project.id
-     audit_filter                = "{ 'atype': 'authenticate', 'param': {   'user': 'auditAdmin',   'db': 'admin',   'mechanism': 'SCRAM-SHA-1' }}"
-     audit_authorization_success = false
-     enabled                     = true
- }
+  project_id                  = mongodbatlas_project.atlas-project.id
+  audit_filter                = "{ 'atype': 'authenticate', 'param': {   'user': 'auditAdmin',   'db': 'admin',   'mechanism': 'SCRAM-SHA-1' }}"
+  audit_authorization_success = false
+  enabled                     = true
+}
 
- # Configure backup schedule
- locals {
- atlas_clusters = {
+# Configure backup schedule
+locals {
+  atlas_clusters = {
     "cluster_1" = { name = "m10-aws-1e", region = "US_EAST_1" },
     "cluster_2" = { name = "m10-aws-2e", region = "US_EAST_2" },
   }
@@ -272,10 +272,10 @@ resource "mongodbatlas_auditing" "test" {
 resource "mongodbatlas_advanced_cluster" "automated_backup_test_cluster" {
   for_each     = local.atlas_clusters
   project_id   = mongodbatlas_project.atlas-project.id
- name         = each.value.name
+  name         = each.value.name
   cluster_type = "REPLICASET"
 
- replication_specs {
+  replication_specs {
     region_configs {
       electable_specs {
         instance_size = "M10"
@@ -325,7 +325,7 @@ resource "mongodbatlas_cloud_backup_schedule" "test" {
   policy_item_daily {
     frequency_interval = 1 #accepted values = 1 -> every 1 day
     retention_unit     = "days"
-   retention_value    = 4
+    retention_value    = 4
   }
   policy_item_weekly {
     frequency_interval = 4 # accepted values = 1 to 7 -> every 1=Monday,2=Tuesday,3=Wednesday,4=Thursday,5=Friday,6=Saturday,7=Sunday day of the week
