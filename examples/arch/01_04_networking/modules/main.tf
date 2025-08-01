@@ -14,6 +14,9 @@ module "networking_aws" {
 
   project_id   = var.atlas_project_id
   atlas_region = var.atlas_region
+  aws_private_endpoint_encryption_at_rest = {
+    enabled = true
+  }
   aws_private_endpoint = {
     vpc_id             = module.vpc.vpc_id
     subnet_ids         = module.vpc.private_subnets

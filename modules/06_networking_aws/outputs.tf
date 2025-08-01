@@ -10,3 +10,7 @@ output "aws_region" {
 output "aws_vpc_cidr_block" {
   value = try(data.aws_vpc.this[0].cidr_block, null)
 }
+
+output "atlas_private_endpoint_id" {
+  value = try(one(mongodbatlas_privatelink_endpoint.mongodb_endpoint).id, null)
+}

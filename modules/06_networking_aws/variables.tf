@@ -21,3 +21,13 @@ variable "tags" {
   type    = map(string)
   default = {}
 }
+
+variable "aws_private_endpoint_encryption_at_rest" {
+  type = object({
+    enabled = bool
+  })
+  nullable = false
+  default = {
+    enabled = false
+  }
+}
