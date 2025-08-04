@@ -143,6 +143,13 @@ resources:
 - All modules are auto-generated - modify `config/mongodbatlas.yaml` instead of individual modules
 - Follow the existing naming conventions
 
+#### Suggestion of a module release process
+This is a suggestion of the process of a module to go from idea to stable. (See related [Azure Module Proposal Pipeline](https://azure.github.io/Azure-Verified-Modules/contributing/process/#new-module-proposal--creation)).
+
+1. Internal development. A module is created in the [./modules](./modules/) directory based on example needs in [examples](./examples/). Multiple variations of the same module can exist. The goal of this phase is to find a flexible yet opinionated initial module.
+2. Beta module. Released in its own repostiory but with a `0.X.Y` release tag and disclaimer: *This module follows the semantic versioning and versions prior to 1.0.0 should be considered pre-release versions. This v0.X.Y version contains a number of breaking changes and is intended to be the final signficant release prior to the v1.0.0 release*
+3. Stable module. Normal semantic versioning rules. For example a breaking change will lead to a major version bump (`1.X.Y` --> `2.X.Y`).
+
 ## 🔗 Related Projects
 
 - [MongoDB Atlas Terraform Provider](https://registry.terraform.io/providers/mongodb/mongodbatlas/latest)
