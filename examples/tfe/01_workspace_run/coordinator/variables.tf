@@ -9,11 +9,11 @@ variable "tfe_organization" {
   description = "Terraform Enterprise organization"
 }
 variable "tfe_workspace_names" {
-    type = object({
-        platform = optional(string, "vcs-platform")
-        app = optional(string, "vcs-app")
-        project = optional(string, "espen")
-    })
+  type = object({
+    platform = optional(string, "vcs-platform")
+    app      = optional(string, "vcs-app")
+    project  = optional(string, "espen")
+  })
 }
 variable "branch" {
   type        = string
@@ -21,7 +21,7 @@ variable "branch" {
   default     = "tfe-workspace-runs"
 }
 
-variable "vcp_repo" {
+variable "vcs_repo" {
   type    = string
   default = "EspenAlbert/tf-modules-atlas-wip"
 }
@@ -45,9 +45,11 @@ variable "app_variables" {
 }
 
 variable "atlas_credentials" {
-  type = map(string)
+  type      = map(string)
+  sensitive = true
 }
 
 variable "aws_credentials" {
-  type = map(string)
+  type      = map(string)
+  sensitive = true
 }

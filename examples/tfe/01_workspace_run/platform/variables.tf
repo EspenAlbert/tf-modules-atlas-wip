@@ -1,12 +1,13 @@
 variable "app_workspace" {
-    default = ""
+  type    = string
+  default = ""
 }
 variable "tfe_org" {
-    type = string
+  type = string
 }
 
 variable "aws_region" {
-  type        = string
+  type = string
 }
 
 variable "vpc_name" {
@@ -14,5 +15,5 @@ variable "vpc_name" {
 }
 
 variable "vpc_cidr" {
-  type    = string
+  type = string
 }

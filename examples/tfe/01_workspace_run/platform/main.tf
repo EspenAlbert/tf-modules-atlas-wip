@@ -2,13 +2,13 @@
 
 data "tfe_outputs" "app" {
   count = var.app_workspace != "" ? 1 : 0
-    
+
   organization = var.tfe_org
-  workspace = var.app_workspace
+  workspace    = var.app_workspace
 }
 
 locals {
-    atlas_endpoint_service_name = try(data.tfe_outputs.app[0].values.atlas_endpoint_service_name, "")
+  atlas_endpoint_service_name = try(data.tfe_outputs.app[0].values.atlas_endpoint_service_name, "")
 }
 
 
@@ -23,7 +23,7 @@ resource "aws_vpc_endpoint" "aws_endpoint" { # Creation Order 2
   # END internal module args
 
   # Atlas depending field
-  service_name       = local.atlas_endpoint_service_name
+  service_name = local.atlas_endpoint_service_name
 }
 
 output "aws_vpc_endpoint_id" {

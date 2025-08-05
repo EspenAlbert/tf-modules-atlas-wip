@@ -1,9 +1,9 @@
 # https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/data-sources/outputs
 data "tfe_outputs" "platform" {
   count = var.platform_workspace != "" ? 1 : 0
-  
+
   organization = var.tfe_org
-  workspace = var.platform_workspace
+  workspace    = var.platform_workspace
 }
 
 resource "mongodbatlas_privatelink_endpoint" "mongodb_endpoint" { # Creation Order 1
@@ -13,11 +13,11 @@ resource "mongodbatlas_privatelink_endpoint" "mongodb_endpoint" { # Creation Ord
 }
 
 output "atlas_endpoint_service_name" {
-    value = mongodbatlas_privatelink_endpoint.mongodb_endpoint.endpoint_service_name 
+  value = mongodbatlas_privatelink_endpoint.mongodb_endpoint.endpoint_service_name
 }
 
 locals {
-    vpc_endpoint_id = try(data.tfe_outputs.platform[0].values.aws_vpc_endpoint_id, "")
+  vpc_endpoint_id = try(data.tfe_outputs.platform[0].values.aws_vpc_endpoint_id, "")
 }
 
 resource "mongodbatlas_privatelink_endpoint_service" "private_endpoint" { # Creation Order 3

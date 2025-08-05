@@ -13,9 +13,9 @@ terraform {
   required_version = ">= 1.8"
   cloud {
     organization = "mongodb-professional-services"
-    
+
     workspaces {
-      name = "ex-platform"
+      name    = "ex-platform"
       project = "espen"
     }
   }

@@ -1,17 +1,17 @@
 locals {
   platform_variables = merge(var.platform_variables, {
-    aws_region = var.aws_region
-    tfe_org = var.tfe_organization
+    aws_region    = var.aws_region
+    tfe_org       = var.tfe_organization
     app_workspace = tfe_workspace.app.name
   })
   app_variables = merge(var.app_variables, {
-    aws_region = var.aws_region
-    tfe_org = var.tfe_organization
+    aws_region         = var.aws_region
+    tfe_org            = var.tfe_organization
     platform_workspace = tfe_workspace.platform.name
   })
   tfe_config_base = {
     TF_CLOUD_ORGANIZATION = var.tfe_organization
-    TF_CLOUD_PROJECT = var.tfe_workspace_names.project
+    TF_CLOUD_PROJECT      = var.tfe_workspace_names.project
   }
   tfe_config_app = merge(local.tfe_config_base, {
     TF_WORKSPACE = tfe_workspace.app.name
@@ -37,7 +37,7 @@ resource "tfe_workspace" "platform" {
 
   vcs_repo {
     branch         = var.branch
-    identifier     = var.vcp_repo
+    identifier     = var.vcs_repo
     oauth_token_id = tfe_oauth_client.github.oauth_token_id
   }
 }
@@ -50,75 +50,71 @@ resource "tfe_workspace" "app" {
 
   vcs_repo {
     branch         = var.branch
-    identifier     = var.vcp_repo
+    identifier     = var.vcs_repo
     oauth_token_id = tfe_oauth_client.github.oauth_token_id
 
   }
 }
 
 resource "tfe_variable" "platform_vars" {
-    for_each = local.platform_variables
-    key = each.key
-    value = each.value
-    category = "terraform"
-    hcl = false
-    sensitive = false
-    workspace_id = tfe_workspace.platform.id
+  for_each     = local.platform_variables
+  key          = each.key
+  value        = each.value
+  category     = "terraform"
+  sensitive    = false
+  workspace_id = tfe_workspace.platform.id
 }
 
 resource "tfe_variable" "app_vars" {
-    for_each = local.app_variables
-    key = each.key
-    value = each.value
-    category = "terraform"
-    hcl = false
-    sensitive = false
-    workspace_id = tfe_workspace.app.id
+  for_each     = local.app_variables
+  key          = each.key
+  value        = each.value
+  category     = "terraform"
+  sensitive    = false
+  workspace_id = tfe_workspace.app.id
 }
 
 resource "tfe_variable" "atlas_credentials" {
-    for_each = var.atlas_credentials
-    key = each.key
-    value = each.value
-    category = "env"
-    hcl = false
-    sensitive = true
-    workspace_id = tfe_workspace.app.id
+  for_each     = var.atlas_credentials
+  key          = each.key
+  value        = each.value
+  category     = "env"
+  sensitive    = true
+  workspace_id = tfe_workspace.app.id
 }
 
 resource "tfe_variable" "aws_credentials" {
-    for_each = var.aws_credentials
-    key = each.key
-    value = each.value
-    category = "env"
-    hcl = false
-    sensitive = true
-    workspace_id = tfe_workspace.platform.id
+  for_each     = var.aws_credentials
+  key          = each.key
+  value        = each.value
+  category     = "env"
+  sensitive    = true
+  workspace_id = tfe_workspace.platform.id
 }
 
 resource "tfe_variable" "tfe_config_app" {
-    for_each = local.tfe_config_app
-    key = each.key
-    value = each.value
-    category = "env"
-    hcl = false
-    sensitive = false
-    workspace_id = tfe_workspace.app.id
+  for_each     = local.tfe_config_app
+  key          = each.key
+  value        = each.value
+  category     = "env"
+  hcl          = false
+  sensitive    = false
+  workspace_id = tfe_workspace.app.id
 }
 
 resource "tfe_variable" "tfe_config_platform" {
-    for_each = local.tfe_config_platform
-    key = each.key
-    value = each.value
-    category = "env"
-    hcl = false
-    sensitive = false
-    workspace_id = tfe_workspace.platform.id
+  for_each     = local.tfe_config_platform
+  key          = each.key
+  value        = each.value
+  category     = "env"
+  hcl          = false
+  sensitive    = false
+  workspace_id = tfe_workspace.platform.id
 }
 
 resource "tfe_workspace_settings" "output_access" {
-  for_each                  = {
-    app = tfe_workspace.app.id
+  for_each = {
+    app      = tfe_workspace.app.id
     platform = tfe_workspace.platform.id
   }
   workspace_id              = each.value

@@ -1,15 +1,15 @@
 variable "atlas_project_id" {
-    type = string
+  type = string
 }
 
 variable "tfe_org" {
-    type = string
+  type = string
 }
 
 variable "platform_workspace" {
-    type = string
+  type = string
 }
 
 variable "aws_region" {
-    type = string
+  type = string
 }
