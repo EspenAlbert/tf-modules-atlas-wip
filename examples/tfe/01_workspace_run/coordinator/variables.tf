@@ -9,6 +9,10 @@ variable "tfe_organization" {
   description = "Terraform Enterprise organization"
 }
 variable "tfe_workspace_names" {
+  validation {
+    condition     = var.tfe_workspace_names.platform == "vcs-platform" && var.tfe_workspace_names.app == "vcs-app"
+    error_message = "Workspace names cannot be dynamic for now. Please use the default values."
+  }
   type = object({
     platform = optional(string, "vcs-platform")
     app      = optional(string, "vcs-app")
