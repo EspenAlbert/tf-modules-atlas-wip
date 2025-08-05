@@ -71,9 +71,15 @@ module "app_workspace" {
 
 resource "tfe_workspace_settings" "this" {
   for_each = {
-    platform = [module.app_workspace.workspace_id]
-    app      = [module.platform_workspace.workspace_id]
+    platform = {
+      workspace_id              = module.app_workspace.workspace_id
+      remote_state_consumer_ids = [module.platform_workspace.workspace_id]
+    }
+    app = {
+      workspace_id              = module.platform_workspace.workspace_id
+      remote_state_consumer_ids = [module.app_workspace.workspace_id]
+    }
   }
-  workspace_id              = each.key
-  remote_state_consumer_ids = each.value
+  workspace_id              = each.value.workspace_id
+  remote_state_consumer_ids = each.value.remote_state_consumer_ids
 }
