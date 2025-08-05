@@ -41,3 +41,8 @@ variable "sensitive_env_vars" {
   default     = {}
 }
 
+
+variable "project_id" {
+  type        = string
+  description = "project_id in TFE"
+}

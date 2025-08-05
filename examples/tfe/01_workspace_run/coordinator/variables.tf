@@ -10,7 +10,7 @@ variable "tfe_organization" {
 }
 variable "tfe_workspace_names" {
   validation {
-    condition     = var.tfe_workspace_names.platform == "vcs-platform" && var.tfe_workspace_names.app == "vcs-app"
+    condition     = var.tfe_workspace_names.platform == "vcs-platform" && var.tfe_workspace_names.app == "vcs-app" && var.tfe_workspace_names.project == "espen"
     error_message = "Workspace names cannot be dynamic for now. Please use the default values."
   }
   type = object({

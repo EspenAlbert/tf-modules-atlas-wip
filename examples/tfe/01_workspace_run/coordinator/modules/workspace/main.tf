@@ -3,6 +3,7 @@ resource "tfe_workspace" "this" {
   organization      = var.organization
   working_directory = var.working_directory
   queue_all_runs    = false
+  project_id        = var.project_id
 
   vcs_repo {
     branch         = var.vcs_repo.branch

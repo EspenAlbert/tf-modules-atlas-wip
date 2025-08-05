@@ -8,5 +8,9 @@ terraform {
   }
   required_version = ">= 1.8"
 
-  cloud {}
+  cloud {
+    workspaces {
+      name = "ex-coordinator"
+    }
+  }
 }

@@ -17,19 +17,11 @@ locals {
     app_workspace = var.tfe_workspace_names.app
   })
 
-  platform_env_vars = merge(local.tfe_config_base, {
-    TF_WORKSPACE = var.tfe_workspace_names.platform
-  })
-
   # App workspace variables and env vars  
   app_terraform_variables = merge(var.app_variables, {
     aws_region         = var.aws_region
     tfe_org            = var.tfe_organization
     platform_workspace = var.tfe_workspace_names.platform
-  })
-
-  app_env_vars = merge(local.tfe_config_base, {
-    TF_WORKSPACE = var.tfe_workspace_names.app
   })
 }
 
@@ -41,6 +33,12 @@ resource "tfe_oauth_client" "github" {
   service_provider = "github"
 }
 
+data "tfe_project" "this" {
+  organization = var.tfe_organization
+  name         = var.tfe_workspace_names.project
+}
+
+
 module "platform_workspace" {
   source = "./modules/workspace"
 
@@ -50,8 +48,9 @@ module "platform_workspace" {
   vcs_repo          = local.vcs_repo_config
 
   terraform_variables = local.platform_terraform_variables
-  env_vars            = local.platform_env_vars
+  env_vars            = local.tfe_config_base
   sensitive_env_vars  = var.aws_credentials
+  project_id          = data.tfe_project.this.id
 }
 
 module "app_workspace" {
@@ -63,8 +62,9 @@ module "app_workspace" {
   vcs_repo          = local.vcs_repo_config
 
   terraform_variables = local.app_terraform_variables
-  env_vars            = local.app_env_vars
+  env_vars            = local.tfe_config_base
   sensitive_env_vars  = var.atlas_credentials
+  project_id          = data.tfe_project.this.id
 }
 
 
