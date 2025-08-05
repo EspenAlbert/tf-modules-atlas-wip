@@ -14,6 +14,11 @@ variable "tfe_workspace_names" {
     app      = optional(string, "vcs-app")
     project  = optional(string, "espen")
   })
+  default = {
+    platform = "vcs-platform"
+    app      = "vcs-app"
+    project  = "espen"
+  }
 }
 variable "branch" {
   type        = string

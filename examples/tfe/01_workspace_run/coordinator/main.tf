@@ -1,23 +1,35 @@
 locals {
-  platform_variables = merge(var.platform_variables, {
-    aws_region    = var.aws_region
-    tfe_org       = var.tfe_organization
-    app_workspace = tfe_workspace.app.name
-  })
-  app_variables = merge(var.app_variables, {
-    aws_region         = var.aws_region
-    tfe_org            = var.tfe_organization
-    platform_workspace = tfe_workspace.platform.name
-  })
+  vcs_repo_config = {
+    branch         = var.branch
+    identifier     = var.vcs_repo
+    oauth_token_id = tfe_oauth_client.github.oauth_token_id
+  }
+
   tfe_config_base = {
     TF_CLOUD_ORGANIZATION = var.tfe_organization
     TF_CLOUD_PROJECT      = var.tfe_workspace_names.project
   }
-  tfe_config_app = merge(local.tfe_config_base, {
-    TF_WORKSPACE = tfe_workspace.app.name
+
+  # Platform workspace variables and env vars
+  platform_terraform_variables = merge(var.platform_variables, {
+    aws_region    = var.aws_region
+    tfe_org       = var.tfe_organization
+    app_workspace = var.tfe_workspace_names.app
   })
-  tfe_config_platform = merge(local.tfe_config_base, {
-    TF_WORKSPACE = tfe_workspace.platform.name
+
+  platform_env_vars = merge(local.tfe_config_base, {
+    TF_WORKSPACE = var.tfe_workspace_names.platform
+  })
+
+  # App workspace variables and env vars  
+  app_terraform_variables = merge(var.app_variables, {
+    aws_region         = var.aws_region
+    tfe_org            = var.tfe_organization
+    platform_workspace = var.tfe_workspace_names.platform
+  })
+
+  app_env_vars = merge(local.tfe_config_base, {
+    TF_WORKSPACE = var.tfe_workspace_names.app
   })
 }
 
@@ -29,95 +41,39 @@ resource "tfe_oauth_client" "github" {
   service_provider = "github"
 }
 
-resource "tfe_workspace" "platform" {
+module "platform_workspace" {
+  source = "./modules/workspace"
+
   name              = var.tfe_workspace_names.platform
   organization      = var.tfe_organization
-  queue_all_runs    = false
   working_directory = "examples/tfe/01_workspace_run/platform"
+  vcs_repo          = local.vcs_repo_config
 
-  vcs_repo {
-    branch         = var.branch
-    identifier     = var.vcs_repo
-    oauth_token_id = tfe_oauth_client.github.oauth_token_id
-  }
+  terraform_variables = local.platform_terraform_variables
+  env_vars            = local.platform_env_vars
+  sensitive_env_vars  = var.aws_credentials
 }
 
-resource "tfe_workspace" "app" {
+module "app_workspace" {
+  source = "./modules/workspace"
+
   name              = var.tfe_workspace_names.app
   organization      = var.tfe_organization
-  queue_all_runs    = false
   working_directory = "examples/tfe/01_workspace_run/app"
+  vcs_repo          = local.vcs_repo_config
 
-  vcs_repo {
-    branch         = var.branch
-    identifier     = var.vcs_repo
-    oauth_token_id = tfe_oauth_client.github.oauth_token_id
-
-  }
+  terraform_variables = local.app_terraform_variables
+  env_vars            = local.app_env_vars
+  sensitive_env_vars  = var.atlas_credentials
 }
 
-resource "tfe_variable" "platform_vars" {
-  for_each     = local.platform_variables
-  key          = each.key
-  value        = each.value
-  category     = "terraform"
-  sensitive    = false
-  workspace_id = tfe_workspace.platform.id
-}
 
-resource "tfe_variable" "app_vars" {
-  for_each     = local.app_variables
-  key          = each.key
-  value        = each.value
-  category     = "terraform"
-  sensitive    = false
-  workspace_id = tfe_workspace.app.id
-}
 
-resource "tfe_variable" "atlas_credentials" {
-  for_each     = var.atlas_credentials
-  key          = each.key
-  value        = each.value
-  category     = "env"
-  sensitive    = true
-  workspace_id = tfe_workspace.app.id
-}
-
-resource "tfe_variable" "aws_credentials" {
-  for_each     = var.aws_credentials
-  key          = each.key
-  value        = each.value
-  category     = "env"
-  sensitive    = true
-  workspace_id = tfe_workspace.platform.id
-}
-
-resource "tfe_variable" "tfe_config_app" {
-  for_each     = local.tfe_config_app
-  key          = each.key
-  value        = each.value
-  category     = "env"
-  hcl          = false
-  sensitive    = false
-  workspace_id = tfe_workspace.app.id
-}
-
-resource "tfe_variable" "tfe_config_platform" {
-  for_each     = local.tfe_config_platform
-  key          = each.key
-  value        = each.value
-  category     = "env"
-  hcl          = false
-  sensitive    = false
-  workspace_id = tfe_workspace.platform.id
-}
-
-resource "tfe_workspace_settings" "output_access" {
+resource "tfe_workspace_settings" "this" {
   for_each = {
-    app      = tfe_workspace.app.id
-    platform = tfe_workspace.platform.id
+    platform = [module.app_workspace.workspace_id]
+    app      = [module.platform_workspace.workspace_id]
   }
-  workspace_id              = each.value
-  global_remote_state       = false
-  remote_state_consumer_ids = toset([each.value])
+  workspace_id              = each.key
+  remote_state_consumer_ids = each.value
 }
