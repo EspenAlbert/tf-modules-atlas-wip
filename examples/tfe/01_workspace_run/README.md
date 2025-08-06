@@ -285,6 +285,197 @@ The coordinator will:
 3. **Single Region**: Example configured for single AWS region deployment
 4. **Error Handling**: Limited error recovery if intermediate runs fail
 
+## Alternative Approach: Coordinator-Orchestrated Variables
+
+While the current implementation uses cross-workspace remote state sharing and autonomous triggers, an alternative approach would give more control to the coordinator workspace by managing variables directly.
+
+### Current vs Alternative Approach
+
+| Aspect | Current (Autonomous) | Alternative (Coordinator-Managed) |
+|--------|---------------------|-----------------------------------|
+| **Responsibility** | Workspaces trigger each other | Coordinator orchestrates everything |
+| **Data Sharing** | Remote state outputs | Variables injected by coordinator |
+| **Run Triggers** | Cross-workspace `tfe_workspace_run` | Coordinator-managed runs only |
+| **Complexity** | Distributed logic | Centralized orchestration |
+| **Autonomy** | High workspace independence | Coordinator controls flow |
+
+### Alternative Implementation
+
+In this approach, the coordinator would:
+
+1. **Run Platform First** - Create AWS VPC and basic infrastructure
+2. **Extract Platform Outputs** - Read platform state to get VPC details
+3. **Run App with VPC Info** - Inject VPC variables into app workspace
+4. **Extract App Outputs** - Read app state to get Atlas endpoint service
+5. **Update Platform Variables** - Inject Atlas service name back to platform
+6. **Re-run Platform** - Create VPC endpoint with Atlas service info
+7. **Update App Variables** - Inject VPC endpoint ID back to app
+8. **Re-run App** - Complete PrivateLink service creation
+
+### Coordinator Implementation Example
+
+```hcl
+# coordinator/main.tf - Alternative approach
+
+# Step 1: Initial Platform Run
+resource "tfe_workspace_run" "platform_initial" {
+  workspace_id = module.platform_workspace.workspace_id
+  apply {
+    manual_confirm = false
+    wait_for_run   = true
+  }
+}
+
+# Step 2: Read Platform Outputs
+data "tfe_outputs" "platform_initial" {
+  organization = var.tfe_organization
+  workspace    = var.tfe_workspace_names.platform
+  depends_on   = [tfe_workspace_run.platform_initial]
+}
+
+# Step 3: Run App with Platform Variables
+resource "tfe_variable" "app_vpc_info" {
+  key          = "vpc_id"
+  value        = data.tfe_outputs.platform_initial.values.vpc_id
+  category     = "terraform"
+  workspace_id = module.app_workspace.workspace_id
+  depends_on   = [tfe_workspace_run.platform_initial]
+}
+
+resource "tfe_workspace_run" "app_initial" {
+  workspace_id = module.app_workspace.workspace_id
+  apply {
+    manual_confirm = false
+    wait_for_run   = true
+  }
+  depends_on = [tfe_variable.app_vpc_info]
+}
+
+# Step 4: Read App Outputs
+data "tfe_outputs" "app_initial" {
+  organization = var.tfe_organization
+  workspace    = var.tfe_workspace_names.app
+  depends_on   = [tfe_workspace_run.app_initial]
+}
+
+# Step 5: Update Platform with Atlas Service Info
+resource "tfe_variable" "platform_atlas_service" {
+  key          = "atlas_endpoint_service_name"
+  value        = data.tfe_outputs.app_initial.values.atlas_endpoint_service_name
+  category     = "terraform"
+  workspace_id = module.platform_workspace.workspace_id
+  depends_on   = [tfe_workspace_run.app_initial]
+}
+
+# Step 6: Re-run Platform to Create VPC Endpoint
+resource "tfe_workspace_run" "platform_final" {
+  workspace_id = module.platform_workspace.workspace_id
+  apply {
+    manual_confirm = false
+    wait_for_run   = true
+  }
+  depends_on = [tfe_variable.platform_atlas_service]
+}
+
+# Step 7: Read Platform Final Outputs
+data "tfe_outputs" "platform_final" {
+  organization = var.tfe_organization
+  workspace    = var.tfe_workspace_names.platform
+  depends_on   = [tfe_workspace_run.platform_final]
+}
+
+# Step 8: Update App with VPC Endpoint Info
+resource "tfe_variable" "app_vpc_endpoint" {
+  key          = "vpc_endpoint_id"
+  value        = data.tfe_outputs.platform_final.values.aws_vpc_endpoint_id
+  category     = "terraform"
+  workspace_id = module.app_workspace.workspace_id
+  depends_on   = [tfe_workspace_run.platform_final]
+}
+
+# Step 9: Final App Run to Complete PrivateLink
+resource "tfe_workspace_run" "app_final" {
+  workspace_id = module.app_workspace.workspace_id
+  apply {
+    manual_confirm = false
+    wait_for_run   = true
+  }
+  depends_on = [tfe_variable.app_vpc_endpoint]
+}
+```
+
+### Simplified Workspace Logic
+
+With this approach, the platform and app workspaces become much simpler:
+
+**Platform Workspace** (`platform/main.tf`):
+```hcl
+# No cross-workspace data sources needed
+# No tfe_workspace_run resources needed
+
+variable "atlas_endpoint_service_name" {
+  type        = string
+  default     = ""
+  description = "Injected by coordinator"
+}
+
+resource "aws_vpc_endpoint" "aws_endpoint" {
+  count = var.atlas_endpoint_service_name != "" ? 1 : 0
+  # ... rest of configuration
+  service_name = var.atlas_endpoint_service_name
+}
+```
+
+**App Workspace** (`app/main.tf`):
+```hcl
+# No cross-workspace data sources needed
+# No tfe_workspace_run resources needed
+
+variable "vpc_endpoint_id" {
+  type        = string
+  default     = ""
+  description = "Injected by coordinator"
+}
+
+resource "mongodbatlas_privatelink_endpoint_service" "private_endpoint" {
+  count = var.vpc_endpoint_id != "" ? 1 : 0
+  # ... rest of configuration
+  endpoint_service_id = var.vpc_endpoint_id
+}
+```
+
+### Benefits of Alternative Approach
+
+1. **Centralized Control**: All orchestration logic in one place
+2. **Simpler Workspaces**: Platform and app workspaces focus only on their resources
+3. **Explicit Dependencies**: Clear execution order defined in coordinator
+4. **Easier Debugging**: Single point to troubleshoot workflow issues
+5. **No Cross-Workspace Permissions**: No need for remote state consumer setup
+6. **Linear Execution**: Predictable step-by-step execution
+
+### Drawbacks of Alternative Approach
+
+1. **Coordinator Complexity**: More complex coordinator with multiple runs and data sources
+2. **Tight Coupling**: Workspaces become more dependent on coordinator structure
+3. **Longer Execution**: More sequential runs vs parallel potential
+4. **Variable Management**: Need to manage variable lifecycle and cleanup
+5. **Less Autonomy**: Teams have less independence in their workspace logic
+
+### When to Use Each Approach
+
+**Current Approach (Autonomous)** is better for:
+- Teams that need high autonomy
+- Complex scenarios with multiple interdependencies
+- When workspaces should be self-sufficient
+- Advanced Terraform teams comfortable with conditional logic
+
+**Alternative Approach (Coordinator-Managed)** is better for:
+- Centralized DevOps teams managing everything
+- Simpler workspace requirements
+- When predictable execution order is critical
+- Teams newer to Terraform looking for explicit workflows
+
+Both approaches solve the same fundamental problem but with different trade-offs in complexity, control, and team autonomy.
 
 ## Related Resources
 
