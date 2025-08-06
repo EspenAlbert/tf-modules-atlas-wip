@@ -48,6 +48,7 @@ resource "tfe_workspace_run" "app_run" {
 
   apply {
     manual_confirm = true
-    wait_for_run   = false
+    wait_for_run   = true # Wait for the aws_vpc_endpoint to be created before running the app
   }
+  depends_on = [aws_vpc_endpoint.aws_endpoint]
 }

@@ -41,6 +41,7 @@ resource "tfe_workspace_run" "platform_run" {
 
   apply {
     manual_confirm = true
-    wait_for_run   = false
+    wait_for_run   = true # Wait for this private_endpoint service to be created before running the plaform
   }
+  depends_on = [mongodbatlas_privatelink_endpoint_service.private_endpoint]
 }
