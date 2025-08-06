@@ -19,7 +19,7 @@ module "vpc" {
   manage_default_network_acl    = false
 
   azs             = local.azs
-  private_subnets = [for k, v in local.azs : cidrsubnet(var.vpc_cidr, local.subnet_count, k)]
+  private_subnets = [for k, v in local.azs : cidrsubnet(var.vpc_cidr, 2, k)] # only need 2 bits as long as subnet_count < 5
 
   tags = {
     Name = var.vpc_name

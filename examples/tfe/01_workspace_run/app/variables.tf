@@ -12,4 +12,9 @@ variable "platform_workspace" {
 
 variable "aws_region" {
   type = string
+
+  validation {
+    condition     = can(regex("^([a-z]{2}-[a-z]+-\\d)$", var.aws_region))
+    error_message = "aws_region must be a valid AWS region identifier, e.g. us-east-1."
+  }
 }

@@ -31,12 +31,12 @@ resource "tfe_variable" "env_vars" {
   workspace_id = tfe_workspace.this.id
 }
 
+# ideally these would be created per project/org and used as a `tfe_variable_set, but for this example we keep the standalone per workspace
 resource "tfe_variable" "sensitive_env_vars" {
-  for_each     = nonsensitive(var.sensitive_env_vars)
+  for_each     = nonsensitive(var.sensitive_env_vars) # Keys are not sensitive, but values are
   key          = each.key
   value        = each.value
   category     = "env"
-  hcl          = false
   sensitive    = true
   workspace_id = tfe_workspace.this.id
 }
