@@ -7,10 +7,6 @@ data "tfe_outputs" "app" {
   workspace    = var.app_workspace
 }
 
-data "aws_vpc_endpoint" "existing" {
-
-
-}
 data "tfe_outputs" "platform" {
   workspace    = "vcs-platform"
   organization = var.tfe_org
