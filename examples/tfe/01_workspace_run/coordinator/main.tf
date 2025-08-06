@@ -9,6 +9,9 @@ locals {
     TF_CLOUD_ORGANIZATION = var.tfe_organization
     TF_CLOUD_PROJECT      = var.tfe_workspace_names.project
   }
+  shared_sensitive_variables = {
+    tfe_token = tfe_team_token.this.token
+  }
 
   # Platform workspace variables and env vars
   platform_terraform_variables = merge(var.platform_variables, {
@@ -38,6 +41,21 @@ data "tfe_project" "this" {
   name         = var.tfe_workspace_names.project
 }
 
+data "tfe_team" "this" {
+  name         = var.tfe_team_name
+  organization = var.tfe_organization
+}
+
+resource "time_rotating" "this" {
+  rotation_days = 30
+}
+
+resource "tfe_team_token" "this" {
+  team_id     = data.tfe_team.this.id
+  description = "token used to allow triggering runs in sibling workspaces"
+  expired_at  = time_rotating.this.rotation_rfc3339
+}
+
 
 module "platform_workspace" {
   source = "./modules/workspace"
@@ -47,10 +65,11 @@ module "platform_workspace" {
   working_directory = "examples/tfe/01_workspace_run/platform"
   vcs_repo          = local.vcs_repo_config
 
-  terraform_variables = local.platform_terraform_variables
-  env_vars            = local.tfe_config_base
-  sensitive_env_vars  = var.aws_credentials
-  project_id          = data.tfe_project.this.id
+  terraform_variables           = local.platform_terraform_variables
+  env_vars                      = local.tfe_config_base
+  sensitive_env_vars            = var.aws_credentials
+  project_id                    = data.tfe_project.this.id
+  terraform_sensitive_variables = local.shared_sensitive_variables
 }
 
 module "app_workspace" {
@@ -61,10 +80,11 @@ module "app_workspace" {
   working_directory = "examples/tfe/01_workspace_run/app"
   vcs_repo          = local.vcs_repo_config
 
-  terraform_variables = local.app_terraform_variables
-  env_vars            = local.tfe_config_base
-  sensitive_env_vars  = var.atlas_credentials
-  project_id          = data.tfe_project.this.id
+  terraform_variables           = local.app_terraform_variables
+  env_vars                      = local.tfe_config_base
+  sensitive_env_vars            = var.atlas_credentials
+  project_id                    = data.tfe_project.this.id
+  terraform_sensitive_variables = local.shared_sensitive_variables
 }
 
 

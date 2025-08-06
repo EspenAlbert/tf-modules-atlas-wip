@@ -21,3 +21,9 @@ variable "vpc_cidr" {
     error_message = "vpc_cidr must be a valid IPv4 CIDR notation, e.g. 10.0.0.0/16."
   }
 }
+
+variable "tfe_token" {
+  type        = string
+  description = "Terraform Enterprise token. Must have admin access to allow triggering a run in the sibling workspace"
+  sensitive   = true
+}

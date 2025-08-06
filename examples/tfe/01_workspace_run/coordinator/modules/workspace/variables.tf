@@ -28,6 +28,13 @@ variable "terraform_variables" {
   default     = {}
 }
 
+variable "terraform_sensitive_variables" {
+  type        = map(string)
+  description = "Terraform sensitive variables to set in the workspace"
+  sensitive   = true
+  default     = {}
+}
+
 variable "env_vars" {
   type        = map(string)
   description = "Environment variables to set in the workspace"

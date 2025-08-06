@@ -21,6 +21,15 @@ resource "tfe_variable" "terraform_vars" {
   workspace_id = tfe_workspace.this.id
 }
 
+resource "tfe_variable" "terraform_sensitive_vars" {
+  for_each     = nonsensitive(var.terraform_sensitive_variables) # Keys are not sensitive, but values are
+  key          = each.key
+  value        = each.value
+  category     = "terraform"
+  sensitive    = true
+  workspace_id = tfe_workspace.this.id
+}
+
 resource "tfe_variable" "env_vars" {
   for_each     = var.env_vars
   key          = each.key

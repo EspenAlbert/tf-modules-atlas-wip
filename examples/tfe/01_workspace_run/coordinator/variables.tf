@@ -8,6 +8,11 @@ variable "tfe_organization" {
   type        = string
   description = "Terraform Enterprise organization"
 }
+variable "tfe_team_name" {
+  type        = string
+  description = "Terraform Enterprise team name"
+}
+
 variable "tfe_workspace_names" {
   validation {
     condition     = var.tfe_workspace_names.platform == "vcs-platform" && var.tfe_workspace_names.app == "vcs-app" && var.tfe_workspace_names.project == "espen"
