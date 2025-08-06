@@ -37,7 +37,7 @@ data "tfe_workspace" "platform" {
 resource "tfe_workspace_run" "platform_run" {
   count = local.missing_vpc_endpoint ? 1 : 0
 
-  workspace_id = data.tfe_workspace.platform[0].id
+  workspace_id = data.tfe_workspace.platform[0].name
 
   apply {
     manual_confirm = true
