@@ -477,6 +477,174 @@ resource "mongodbatlas_privatelink_endpoint_service" "private_endpoint" {
 
 Both approaches solve the same fundamental problem but with different trade-offs in complexity, control, and team autonomy.
 
+## Implementation Gotchas
+
+### 1. Team Token Required for Cross-Workspace Runs
+
+**Issue**: The `tfe_workspace_run` resource requires proper authentication to trigger runs in other workspaces.
+
+**Error you'll see**:
+```
+Error: error creating run for workspace ws-PAC96vFddwdgTyjt: resource not found
+```
+
+**Solution**: Create a `tfe_team_token` with appropriate permissions as shown in the coordinator configuration:
+
+```hcl
+# coordinator/main.tf
+data "tfe_team" "this" {
+  name         = var.tfe_team_name
+  organization = var.tfe_organization
+}
+
+resource "tfe_team_token" "this" {
+  team_id     = data.tfe_team.this.id
+  description = "token used to allow triggering runs in sibling workspaces"
+  expired_at  = time_rotating.this.rotation_rfc3339
+}
+
+# Inject token into workspaces as sensitive variable
+locals {
+  shared_sensitive_variables = {
+    tfe_token = tfe_team_token.this.token
+  }
+}
+```
+
+**Required Team Permissions**:
+- Read access to workspace state (for `data.tfe_outputs`)
+- Manage runs permission (for `tfe_workspace_run`)
+- Variable management (if using coordinator-managed approach)
+
+### 2. Static Workspace Names in Cloud Backend
+
+**Issue**: The `terraform.cloud.workspaces.name` configuration in child workspaces is static and cannot use variables or environment variables like `TF_WORKSPACE`.
+
+**Current limitation**:
+```hcl
+# This DOESN'T work in platform/app workspaces
+terraform {
+  cloud {
+    organization = var.tfe_org  # ❌ Cannot use variables
+    workspaces {
+      name = var.workspace_name  # ❌ Cannot use variables
+    }
+  }
+}
+```
+
+**Required static configuration**:
+```hcl
+# platform/versions.tf - Must be hardcoded
+terraform {
+  cloud {
+    organization = "your-org-name"  # ✅ Must be static
+    workspaces {
+      name = "vcs-platform"         # ✅ Must be static
+    }
+  }
+}
+```
+
+**Workaround for Production Use**:
+
+In real-world scenarios, this limitation is often not problematic because:
+
+1. **Module-based approach**: Platform and app workspaces typically call modules rather than containing all logic:
+   ```hcl
+   # platform/main.tf (simple)
+   module "aws_infrastructure" {
+     source = "../../modules/aws-platform"
+     # ... variables
+   }
+   ```
+
+2. **Template generation**: Use tools like `cookiecutter` or `terragrunt` to generate workspace configurations
+
+3. **Workspace-per-environment**: Create separate workspace configurations for each environment:
+   ```
+   workspaces/
+   ├── dev-platform/     # name = "dev-platform"
+   ├── staging-platform/ # name = "staging-platform"
+   └── prod-platform/    # name = "prod-platform"
+   ```
+
+### 3. Remote State Consumer Permissions
+
+**Issue**: Cross-workspace data access requires explicit permission configuration.
+
+**Error you might see**:
+```
+Error: Error reading outputs from workspace: workspace access denied
+```
+
+**Solution**: Configure remote state consumers in the coordinator:
+```hcl
+resource "tfe_workspace_settings" "this" {
+  for_each = {
+    platform = {
+      workspace_id              = module.app_workspace.workspace_id
+      remote_state_consumer_ids = [module.platform_workspace.workspace_id]
+    }
+    app = {
+      workspace_id              = module.platform_workspace.workspace_id
+      remote_state_consumer_ids = [module.app_workspace.workspace_id]
+    }
+  }
+  workspace_id              = each.value.workspace_id
+  remote_state_consumer_ids = each.value.remote_state_consumer_ids
+}
+```
+
+### 4. Manual Confirmation in Cross-Workspace Runs
+
+**Issue**: By default, cross-workspace triggered runs require manual confirmation, which defeats the automation purpose.
+
+**Configuration**:
+```hcl
+# In platform/app workspaces
+resource "tfe_workspace_run" "app_run" {
+  workspace_id = data.tfe_workspace.app[0].id
+
+  apply {
+    manual_confirm = true   # ❌ Requires manual intervention
+    wait_for_run   = false  # ❌ Doesn't wait for completion
+  }
+}
+
+# Better for automation
+resource "tfe_workspace_run" "app_run" {
+  workspace_id = data.tfe_workspace.app[0].id
+
+  apply {
+    manual_confirm = false  # ✅ Automatic confirmation
+    wait_for_run   = true   # ✅ Waits for completion
+  }
+}
+```
+
+**Security Consideration**: Setting `manual_confirm = false` means runs will auto-apply. Ensure your team is comfortable with this level of automation.
+
+### 5. Workspace Run Polling and Timeouts
+
+**Issue**: The TFE provider polls for run completion, which can timeout on long-running deployments.
+
+**Symptoms**:
+- Runs shown as "Still creating..." for extended periods
+- Terraform operations timing out while workspace runs are still active
+
+**Monitoring**: Watch for these log patterns:
+```
+tfe_workspace_run.app_run: Still creating... [02m58s elapsed]
+[INFO] Waiting for run run-p2WpmMJsCj7drMm2, status is applying
+[INFO] Run run-p2WpmMJsCj7drMm2 has reached a terminal state: applied
+```
+
+**Best Practices**:
+- Use `wait_for_run = true` for sequential dependencies
+- Consider timeout settings for very long deployments
+- Monitor TFE UI for run status if Terraform times out
+
 ## Related Resources
 
 - [Terraform Cloud Workspaces](https://developer.hashicorp.com/terraform/cloud-docs/workspaces)
