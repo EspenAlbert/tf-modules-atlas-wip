@@ -1,0 +1,23 @@
+
+terraform {
+  required_providers {
+    tfe = {
+      source  = "hashicorp/tfe"
+      version = "~> 0.68.0"
+    }
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+  required_version = ">= 1.8"
+  cloud {
+    workspaces {
+      name = "vcs-platform"
+    }
+  }
+}
+
+provider "tfe" {
+  token = var.tfe_token
+}
