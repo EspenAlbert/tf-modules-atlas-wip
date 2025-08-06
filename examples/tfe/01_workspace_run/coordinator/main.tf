@@ -103,3 +103,31 @@ resource "tfe_workspace_settings" "this" {
   workspace_id              = each.value.workspace_id
   remote_state_consumer_ids = each.value.remote_state_consumer_ids
 }
+
+
+resource "tfe_workspace_run" "platform_run" {
+  workspace_id = module.platform_workspace.workspace_id
+
+  apply {
+    manual_confirm = false
+    wait_for_run   = true
+  }
+  destroy {
+    manual_confirm = false
+    wait_for_run   = true
+  }
+}
+
+resource "tfe_workspace_run" "app_run" {
+  workspace_id = module.app_workspace.workspace_id
+
+  apply {
+    manual_confirm = false
+    wait_for_run   = true
+  }
+  destroy {
+    manual_confirm = false
+    wait_for_run   = true
+  }
+  depends_on = [tfe_workspace_run.platform_run]
+}
