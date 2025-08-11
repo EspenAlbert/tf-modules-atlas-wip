@@ -16,11 +16,10 @@ variable "cloud_backup_schedule" {
     update_snapshots                         = optional(bool)
     use_org_and_group_names_in_export_prefix = optional(bool)
     copy_settings = optional(list(object({
-    #   cloud_provider     = optional(string)
       frequencies        = optional(list(string))
-      # region_name        = optional(string)
+      region_name        = optional(string)
       should_copy_oplogs = optional(bool)
-      # zone_id            = optional(string)
+      zone_id            = optional(string)
     })))
     export = optional(list(object({
       export_bucket_id = optional(string)
