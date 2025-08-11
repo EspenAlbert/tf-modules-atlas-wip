@@ -1,6 +1,7 @@
 
 locals {
   subnet_count = 3
+  subnet_bits  = 3 # 2^3 = 8 subnets, in case more needs to be added
   azs          = slice(data.aws_availability_zones.available.names, 0, local.subnet_count)
   aws_region   = replace(lower(var.atlas_region), "_", "-")
 
@@ -20,7 +21,7 @@ module "vpc" {
   manage_default_network_acl    = false
 
   azs             = local.azs
-  private_subnets = [for k, v in local.azs : cidrsubnet(var.vpc_cidr, local.subnet_count, k)]
+  private_subnets = [for k, v in local.azs : cidrsubnet(var.vpc_cidr, local.subnet_bits, k)]
 
   tags = merge({
     Name = var.vpc_name

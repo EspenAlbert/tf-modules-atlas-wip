@@ -1,13 +1,13 @@
 
 
 variable "cloud_backup_schedule_enabled" {
-  type = bool
+  type    = bool
   default = false
 }
 
 variable "cloud_backup_schedule" {
   type = object({
-    auto_export_enabled                      = optional(bool)
+    auto_export_enabled = optional(bool)
     # cluster_name                             = string
     # project_id                               = string
     reference_hour_of_day                    = optional(number)
@@ -16,6 +16,7 @@ variable "cloud_backup_schedule" {
     update_snapshots                         = optional(bool)
     use_org_and_group_names_in_export_prefix = optional(bool)
     copy_settings = optional(list(object({
+      cloud_provider     = optional(string) # "AWS" | "GCP" | "AZURE"
       frequencies        = optional(list(string))
       region_name        = optional(string)
       should_copy_oplogs = optional(bool)

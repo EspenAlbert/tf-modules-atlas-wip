@@ -4,8 +4,8 @@ locals {
     "TeamName" = "TeamA"
     "AppName"  = "ProductManagementApp"
     "Env"      = var.environment
-    "Version"  = "8.0"
-    "Email"    = "marissa@acme.com"
+    "Version"  = "v0.0.0"
+    "Email"    = "username@example.com"
   }
   clusterWithAlertsName = "ClusterPortalProd"
   audit_filter_json = jsonencode({
