@@ -1,4 +1,8 @@
 
+locals {
+  zone_id = mongodbatlas_advanced_cluster.this.replication_specs.*.zone_id[0]
+  cloud_provider = mongodbatlas_advanced_cluster.this.replication_specs[0].region_configs.*.provider_name[0]
+}
 
 resource "mongodbatlas_cloud_backup_schedule" "this" {
   count = var.cloud_backup_schedule_enabled ? 1 : 0
@@ -8,16 +12,13 @@ resource "mongodbatlas_cloud_backup_schedule" "this" {
 
   auto_export_enabled = var.cloud_backup_schedule.auto_export_enabled
   dynamic "copy_settings" {
-    for_each = mongodbatlas_advanced_cluster.this.replication_specs
+    for_each = var.cloud_backup_schedule.copy_settings
     content {
-      # cloud_provider     = copy_settings.value.cloud_provider
-      # region_name        = copy_settings.value.region_name
-      # zone_id            = copy_settings.value.zone_id
-      cloud_provider     = copy_settings.value.region_configs[0].provider_name
-      region_name        = copy_settings.value.region_configs[0].region_name
-      zone_id            = copy_settings.value.region_configs[0].zone_id
+      region_name        = copy_settings.value.region_name
+      cloud_provider     = coalesce(copy_settings.value.cloud_provider, local.cloud_provider)
+      zone_id            = coalesce(copy_settings.value.zone_id, local.zone_id)
 
-      frequencies        = copy_settings.value.region_configs[0].frequencies
+      frequencies        = copy_settings.value.frequencies
       should_copy_oplogs = copy_settings.value.should_copy_oplogs
     }
   }
