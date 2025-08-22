@@ -3,7 +3,7 @@ locals {
   aws_region              = replace(lower(var.atlas_region), "_", "-")
   create_aws_vpc_endpoint = var.existing_vpc_endpoint_id != null
   vpc_endpoint_id         = local.create_aws_vpc_endpoint ? aws_vpc_endpoint.aws_endpoint[0].id : data.aws_vpc_endpoint.this[0].id
-  vpc_id                  = local.create_aws_vpc_endpoint ? aws_vpc_endpoint.aws_endpoint[0].vpc_id : data.aws_vpc.this[0].vpc_id
+  vpc_id                  = local.create_aws_vpc_endpoint ? aws_vpc_endpoint.aws_endpoint[0].vpc_id : data.aws_vpc_endpoint.this[0].vpc_id
   vpc_cidr_block          = data.aws_vpc.this.cidr_block
 }
 
