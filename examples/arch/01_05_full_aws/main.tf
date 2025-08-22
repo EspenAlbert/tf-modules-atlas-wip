@@ -42,6 +42,19 @@ module "cloud_provider_aws" {
   aws_iam_role_name = var.aws_iam_role_name
 }
 
+module "atlas_aws" {
+  source     = "../../../modules/07_atlas_aws"
+  project_id = module.atlas_project.id
+  existing_aws_iam_role = {
+    enabled = true
+    arn     = module.cloud_provider_aws.aws_iam_role_arn
+  }
+  push_based_log_export = {
+    enabled     = true
+    bucket_name = "my-s3-bucket"
+  }
+}
+
 module "auth_db" {
   source     = "../../../modules/05_auth_db"
   project_id = module.atlas_project.id
@@ -59,21 +72,15 @@ module "auth_db" {
   custom_db_roles = {
     my_custom_role = {
       actions = {
-        UPDATE = [
-          {
-            database_name = "myDb"
-          }
-        ]
-        INSERT = [
-          {
-            database_name = "myDb"
-          }
-        ]
-        REMOVE = [
-          {
-            database_name = "myDb"
-          }
-        ]
+        UPDATE = [{
+          database_name = "myDb"
+        }]
+        INSERT = [{
+          database_name = "myDb"
+        }]
+        REMOVE = [{
+          database_name = "myDb"
+        }]
       }
     }
   }
