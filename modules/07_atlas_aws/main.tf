@@ -1,6 +1,6 @@
 locals {
   has_existing_aws_iam_role = var.existing_aws_iam_role.enabled
-  aws_iam_role_arn = local.has_existing_aws_iam_role ? var.existing_aws_iam_role.arn : aws_iam_role.this[0].arn
+  aws_iam_role_arn          = local.has_existing_aws_iam_role ? var.existing_aws_iam_role.arn : aws_iam_role.this[0].arn
 }
 
 data "aws_iam_role" "this" {
@@ -40,4 +40,14 @@ module "push_based_log_export" {
   bucket_name               = var.push_based_log_export.bucket_name
   bucket_policy_name        = var.push_based_log_export.bucket_policy_name
   timeouts                  = var.push_based_log_export.timeouts
+}
+
+module "privatelink_with_existing_vpc_endpoint" {
+  source = "./modules/privatelink"
+  count  = var.privatelink_with_existing_vpc_endpoint.enabled ? 1 : 0
+
+  project_id                        = var.project_id
+  existing_vpc_endpoint_id          = var.privatelink_with_existing_vpc_endpoint.existing_vpc_endpoint_id
+  add_vpc_cidr_block_project_access = var.privatelink_with_existing_vpc_endpoint.add_vpc_cidr_block_project_access
+  atlas_region                      = var.atlas_region
 }

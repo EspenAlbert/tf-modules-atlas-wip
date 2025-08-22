@@ -51,3 +51,37 @@ variable "push_based_log_export" {
     bucket_name = "not-enabled"
   }
 }
+
+variable "atlas_region" {
+  type        = string
+  description = "Atlas region, required when private link is enabled"
+  default     = ""
+}
+
+variable "privatelink_with_existing_vpc_endpoint" {
+  type = object({
+    enabled                           = optional(bool)
+    existing_vpc_endpoint_id          = optional(string)
+    add_vpc_cidr_block_project_access = optional(bool, false)
+  })
+  default = {
+    enabled                           = false
+    existing_vpc_endpoint_id          = null
+    add_vpc_cidr_block_project_access = false
+  }
+}
+
+variable "privatelink_with_managed_vpc_endpoint" {
+  type = object({
+    enabled            = optional(bool)
+    vpc_id             = optional(string)
+    subnet_ids         = optional(set(string))
+    security_group_ids = optional(set(string))
+  })
+  default = {
+    enabled            = false
+    vpc_id             = ""
+    subnet_ids         = []
+    security_group_ids = []
+  }
+}

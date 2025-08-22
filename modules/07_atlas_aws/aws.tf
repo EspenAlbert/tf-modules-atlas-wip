@@ -8,7 +8,7 @@ resource "aws_iam_role" "this" {
       error_message = "aws_iam_role_name must be set when existing_aws_iam_role_arn is null"
     }
   }
-  
+
   name = var.aws_iam_role_name
 
   assume_role_policy = <<EOF
