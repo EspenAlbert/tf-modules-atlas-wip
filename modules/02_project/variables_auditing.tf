@@ -8,6 +8,6 @@ variable "auditing" {
 }
 
 variable "auditing_enabled" {
-  type = bool
+  type    = bool
   default = false
 }

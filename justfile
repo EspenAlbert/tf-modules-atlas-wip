@@ -31,7 +31,8 @@ tflint:
   cd resource_modules && tflint -f compact --recursive --minimum-failure-severity=warning
 
 fmt:
-  terraform fmt -recursive ./examples
+  terraform fmt -recursive ./examples && \
+  terraform fmt -recursive ./modules
 
 [positional-arguments]
 example-readme *args:

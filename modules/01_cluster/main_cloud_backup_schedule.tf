@@ -1,6 +1,6 @@
 
 locals {
-  zone_id = mongodbatlas_advanced_cluster.this.replication_specs.*.zone_id[0]
+  zone_id        = mongodbatlas_advanced_cluster.this.replication_specs.*.zone_id[0]
   cloud_provider = mongodbatlas_advanced_cluster.this.replication_specs[0].region_configs.*.provider_name[0]
 }
 
@@ -14,9 +14,9 @@ resource "mongodbatlas_cloud_backup_schedule" "this" {
   dynamic "copy_settings" {
     for_each = var.cloud_backup_schedule.copy_settings
     content {
-      region_name        = copy_settings.value.region_name
-      cloud_provider     = coalesce(copy_settings.value.cloud_provider, local.cloud_provider)
-      zone_id            = coalesce(copy_settings.value.zone_id, local.zone_id)
+      region_name    = copy_settings.value.region_name
+      cloud_provider = coalesce(copy_settings.value.cloud_provider, local.cloud_provider)
+      zone_id        = coalesce(copy_settings.value.zone_id, local.zone_id)
 
       frequencies        = copy_settings.value.frequencies
       should_copy_oplogs = copy_settings.value.should_copy_oplogs

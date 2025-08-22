@@ -14,7 +14,7 @@ resource "aws_iam_role" "this" {
       error_message = "aws_iam_role_name must be set when existing_aws_iam_role_arn is null"
     }
   }
-  
+
   name = var.aws_iam_role_name
 
   assume_role_policy = <<EOF
@@ -40,23 +40,23 @@ EOF
 
 resource "aws_kms_key" "this" {
   count = local.create_kms_key ? 1 : 0
-  
+
   description             = "KMS key for atlas LZ Modules"
   deletion_window_in_days = 7
   multi_region            = true
-  
+
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {
-      Sid    = "Enable IAM User Permissions Current AWS Account",
-      Effect = "Allow",
-      Principal = {
-        AWS = local.aws_account_id
+        Sid    = "Enable IAM User Permissions Current AWS Account",
+        Effect = "Allow",
+        Principal = {
+          AWS = local.aws_account_id
+        },
+        Action   = "kms:*",
+        Resource = "*"
       },
-      Action   = "kms:*",
-      Resource = "*"
-    },
       {
         Sid    = "Enable IAM Permissions for Atlas AWS IAM Role ${var.aws_iam_role_name}"
         Effect = "Allow"
