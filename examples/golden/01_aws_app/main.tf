@@ -17,9 +17,17 @@ module "atlas_aws" {
   }
   atlas_region = var.atlas_region
   privatelink_with_managed_vpc_endpoint = {
-    enabled            = true
-    vpc_id             = module.vpc.vpc_id
-    subnet_ids         = module.vpc.private_subnets
-    security_group_ids = [aws_security_group.this.id]
+    enabled                           = true
+    vpc_id                            = module.vpc.vpc_id
+    subnet_ids                        = module.vpc.private_subnets
+    security_group_ids                = [aws_security_group.this.id]
+    add_vpc_cidr_block_project_access = true
+  }
+  encryption_at_rest = {
+    enabled                    = true
+    aws_kms_key_id             = aws_kms_key.key.arn
+    enable_private_endpoint    = true
+    require_private_networking = true
+    enabled_for_search_nodes   = true
   }
 }

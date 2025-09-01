@@ -49,3 +49,44 @@ resource "aws_security_group" "this" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+data "aws_caller_identity" "current" {}
+
+
+resource "aws_kms_key" "key" {
+  description = "MongoDB Atlas KMS key."
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Id" : "key-default-1",
+    "Statement" : [
+      {
+        "Sid" : "Allow administration of the key",
+        "Effect" : "Allow",
+        "Principal" : {
+          "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+        },
+        "Action" : [
+          "kms:*"
+        ],
+        "Resource" : "*"
+      },
+      {
+        "Sid" : "Allow use of the key by specific IAM user",
+        "Effect" : "Allow",
+        "Principal" : {
+          "AWS" : module.atlas_aws.aws_iam_role_arn
+        },
+        "Action" : [
+          "kms:Decrypt",
+          "kms:Encrypt",
+          "kms:DescribeKey"
+        ],
+        "Resource" : "*",
+        "Condition" : {
+          "StringEquals" : {
+            "aws:PrincipalArn" : module.atlas_aws.aws_iam_role_arn
+          }
+        }
+      }
+    ]
+  })
+}
