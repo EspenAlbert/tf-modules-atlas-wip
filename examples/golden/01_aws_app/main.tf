@@ -10,6 +10,10 @@ module "atlas_aws" {
   source            = "../../../modules/07_atlas_aws"
   project_id        = module.atlas_project.id
   aws_iam_role_name = var.aws_iam_role_name
+  aws_iam_role_db_admin = {
+    enabled  = true
+    role_arn = var.aws_iam_role_arn_ec2
+  }
 
   push_based_log_export = {
     enabled     = true

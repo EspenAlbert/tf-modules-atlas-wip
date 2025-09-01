@@ -33,6 +33,19 @@ variable "aws_iam_role_name" {
   nullable    = true
 }
 
+variable "aws_iam_role_db_admin" {
+  type = object({
+    enabled     = bool
+    role_arn    = string
+    description = optional(string, "Atlas AWS IAM role for database admin")
+    labels      = optional(map(string), {})
+  })
+  default = {
+    enabled  = false
+    role_arn = ""
+  }
+}
+
 variable "encryption_at_rest" {
   type = object({
     enabled                    = bool
