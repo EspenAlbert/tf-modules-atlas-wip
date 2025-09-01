@@ -1,7 +1,7 @@
 resource "mongodbatlas_alert_configuration" "this" {
   enabled    = var.enabled
   event_type = var.event_type
-  
+
   dynamic "matcher" {
     for_each = [var.matcher]
     content {
@@ -10,7 +10,7 @@ resource "mongodbatlas_alert_configuration" "this" {
       value      = matcher.value.value
     }
   }
-  
+
   dynamic "metric_threshold_config" {
     for_each = var.metric_threshold_config == null ? [] : [var.metric_threshold_config]
     content {
@@ -23,7 +23,7 @@ resource "mongodbatlas_alert_configuration" "this" {
   }
   dynamic "notification" {
     for_each = [var.notification]
-    
+
     content {
       api_token                   = notification.value.api_token
       channel_name                = notification.value.channel_name

@@ -5,9 +5,13 @@ variable "auditing" {
     # enabled                     = optional(bool)
     # project_id                  = string
   })
+  default = {
+    audit_authorization_success = null
+    audit_filter                = null
+  }
 }
 
 variable "auditing_enabled" {
-  type = bool
+  type    = bool
   default = false
 }

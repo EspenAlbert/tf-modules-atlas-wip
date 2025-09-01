@@ -44,8 +44,8 @@ variable "notification" {
 }
 
 variable "enabled" {
-  type     = bool
-  default  = true
+  type    = bool
+  default = true
 }
 
 variable "metric_threshold_config" {
@@ -68,5 +68,5 @@ variable "threshold_config" {
     units     = optional(string)
   })
   nullable = true
-  default = null
+  default  = null
 }
