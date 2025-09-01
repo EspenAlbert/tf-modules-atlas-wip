@@ -33,6 +33,22 @@ variable "aws_iam_role_name" {
   nullable    = true
 }
 
+variable "encryption_at_rest" {
+  type = object({
+    enabled                    = bool
+    aws_kms_key_id             = string
+    require_private_networking = optional(bool, true)
+    enabled_for_search_nodes   = optional(bool, true)
+    enable_private_endpoint    = optional(bool, true)
+  })
+  default = {
+    enabled                    = false
+    aws_kms_key_id             = ""
+    require_private_networking = true
+    enabled_for_search_nodes   = true
+    enable_private_endpoint    = true
+  }
+}
 
 variable "push_based_log_export" {
   type = object({

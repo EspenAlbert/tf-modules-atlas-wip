@@ -29,6 +29,20 @@ resource "mongodbatlas_cloud_provider_access_authorization" "this" {
   }
 }
 
+module "encryption_at_rest" {
+  source = "./modules/encryption_at_rest"
+  count  = var.encryption_at_rest.enabled ? 1 : 0
+
+  project_id                 = var.project_id
+  atlas_region               = var.atlas_region
+  aws_kms_key_id             = var.encryption_at_rest.aws_kms_key_id
+  enabled_for_search_nodes   = var.encryption_at_rest.enabled_for_search_nodes
+  enable_private_endpoint    = var.encryption_at_rest.enable_private_endpoint
+  existing_aws_iam_role_arn  = local.aws_iam_role_arn
+  mongodb_role_id            = mongodbatlas_cloud_provider_access_authorization.this.role_id
+  require_private_networking = var.encryption_at_rest.require_private_networking
+}
+
 module "push_based_log_export" {
   source = "./modules/push_based_log"
   count  = var.push_based_log_export.enabled ? 1 : 0
