@@ -65,3 +65,21 @@ module "privatelink_with_existing_vpc_endpoint" {
   add_vpc_cidr_block_project_access = var.privatelink_with_existing_vpc_endpoint.add_vpc_cidr_block_project_access
   atlas_region                      = var.atlas_region
 }
+
+module "database_user_iam_role" {
+  source = "./modules/database_user_iam_role"
+  count  = var.aws_iam_role_db_admin.enabled ? 1 : 0
+
+  project_id        = var.project_id
+  existing_role_arn = var.aws_iam_role_db_admin.role_arn
+  description       = var.aws_iam_role_db_admin.description
+  labels            = var.aws_iam_role_db_admin.labels
+  roles = [{
+    role_name     = "readWriteAnyDatabase"
+    database_name = "admin"
+    },
+    {
+      role_name     = "atlasAdmin"
+      database_name = "admin"
+  }]
+}
