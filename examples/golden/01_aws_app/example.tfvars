@@ -6,3 +6,4 @@ mongodb_version            = "8.0"
 aws_iam_role_name          = "mongodb-atlas-lz-modules"
 vpc_name                   = "mongodb-lz-modules-vpc"
 aws_iam_role_arn_ec2       = "arn:aws:iam::123456789012:role/mongodb-atlas-lz-modules" #TODO: Create an ARN for ec2 instance
+cluster_name               = "my-cluster"
