@@ -136,8 +136,7 @@ resource "mongodbatlas_advanced_cluster" "this" {
 }
 
 module "cloud_backup_schedule" {
-  count = var.cloud_backup_schedule_enabled ? 1 : 0
-
+  count  = var.cloud_backup_schedule_enabled ? 1 : 0
   source = "./modules/cloud_backup_schedule"
 
   cluster_name = mongodbatlas_advanced_cluster.this.name
@@ -147,4 +146,16 @@ module "cloud_backup_schedule" {
   default_replication_spec_zone_id       = mongodbatlas_advanced_cluster.this.replication_specs[0].region_configs.*.provider_name[0]
   default_replication_spec_provider_name = mongodbatlas_advanced_cluster.this.replication_specs[0].region_configs.*.provider_name[0]
   cloud_backup_schedule                  = var.cloud_backup_schedule
+}
+
+module "search_deployment" {
+  count  = var.search_deployment_enabled ? 1 : 0
+  source = "./modules/search_deployment"
+
+  cluster_name             = mongodbatlas_advanced_cluster.this.name
+  project_id               = var.project_id
+  specs                    = var.search_deployment.specs
+  delete_on_create_timeout = var.search_deployment.delete_on_create_timeout
+  skip_wait_on_update      = var.search_deployment.skip_wait_on_update
+  timeouts                 = var.search_deployment.timeouts
 }

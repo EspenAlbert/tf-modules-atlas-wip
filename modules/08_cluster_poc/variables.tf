@@ -4,6 +4,29 @@ variable "cloud_backup_schedule_enabled" {
   default = false
 }
 
+variable "search_deployment_enabled" {
+  type    = bool
+  default = false
+}
+
+variable "search_deployment" {
+  type = object({
+    specs = list(object({
+      instance_size = string
+      node_count    = number
+    }))
+    delete_on_create_timeout = optional(bool, true)
+    skip_wait_on_update      = optional(bool, false)
+    timeouts = optional(object({
+      create = optional(string)
+      delete = optional(string)
+      update = optional(string)
+    }))
+  })
+  nullable = true
+  default  = null
+}
+
 # duplicate of the one in modules/cloud_backup_schedule/variables.tf
 variable "cloud_backup_schedule" {
   type = object({
