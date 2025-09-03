@@ -90,3 +90,30 @@ resource "aws_kms_key" "key" {
     ]
   })
 }
+
+resource "aws_iam_role" "app_role" {
+
+  lifecycle {
+    precondition {
+      condition     = var.aws_iam_role_app_name != null
+      error_message = "aws_iam_role_name must be set when existing_aws_iam_role_arn is null"
+    }
+  }
+  name = var.aws_iam_role_app_name
+
+  # TODO: Update the assume role policy to support a lambda or similar to assume the role
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS":  "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}

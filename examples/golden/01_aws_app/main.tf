@@ -14,12 +14,13 @@ module "atlas_aws" {
 
   aws_iam_role_db_admin = {
     enabled  = true
-    role_arn = var.aws_iam_role_arn_ec2
+    role_arn = aws_iam_role.app_role.arn
   }
 
   push_based_log_export = {
     enabled     = true
-    bucket_name = "my-s3-bucket"
+    bucket_name = var.log_bucket_name
+    create_s3_bucket = true
   }
   privatelink_with_managed_vpc_endpoint = {
     enabled                           = true
@@ -42,8 +43,6 @@ module "atlas_cluster" {
 
   project_id             = module.atlas_project.id
   name                   = var.cluster_name
-  mongo_db_major_version = var.mongodb_version
-
   auto_scaling = {
     compute_enabled            = true
     compute_max_instance_size  = "M60"
@@ -56,4 +55,5 @@ module "atlas_cluster" {
     provider_name = "AWS"
     node_count    = 3
   }]
+  encryption_at_rest_provider = "AWS"
 }

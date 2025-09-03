@@ -19,11 +19,6 @@ variable "atlas_region" {
   description = "Atlas region where resources will be created"
 }
 
-variable "mongodb_version" {
-  type        = string
-  description = "MongoDB Version"
-}
-
 variable "aws_iam_role_name" {
   type        = string
   description = "Created to be used by the atlas cloud provider"
@@ -39,7 +34,7 @@ variable "vpc_cidr" {
   default = "10.0.0.0/16"
 }
 
-variable "aws_iam_role_arn_ec2" {
+variable "aws_iam_role_app_name" {
   type = string
 }
 
@@ -47,4 +42,10 @@ variable "tags" {
   type        = map(string)
   description = "Tags to be applied to the resources"
   default     = {}
+}
+
+# AWS S3 Bucket For Log Export
+variable "log_bucket_name" {
+  type        = string
+  description = "AWS S3 Bucket Name For Log Export"
 }
