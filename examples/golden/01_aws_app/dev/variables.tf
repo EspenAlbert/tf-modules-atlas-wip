@@ -11,7 +11,7 @@ variable "atlas_project_name" {
 
 variable "dev_ips" {
   type = map(object({
-    comment = string
+    comment    = string
     ip_address = string
   }))
   default = {}

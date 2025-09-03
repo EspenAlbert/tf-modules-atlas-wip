@@ -1,5 +1,5 @@
 module "atlas_project" {
-  source           = "../../../modules/02_project"
+  source           = "../../../../modules/02_project"
   name             = var.atlas_project_name
   org_id           = var.atlas_org_id
   auditing_enabled = true
@@ -7,7 +7,7 @@ module "atlas_project" {
 }
 
 module "atlas_aws" {
-  source            = "../../../modules/07_atlas_aws"
+  source            = "../../../../modules/07_atlas_aws"
   project_id        = module.atlas_project.id
   aws_iam_role_name = var.aws_iam_role_name
   atlas_region      = var.atlas_region
@@ -18,9 +18,9 @@ module "atlas_aws" {
   }
 
   push_based_log_export = {
-    enabled     = true
-    bucket_name = var.log_bucket_name
+    enabled          = true
     create_s3_bucket = true
+    bucket_name      = var.log_bucket_name
   }
   privatelink_with_managed_vpc_endpoint = {
     enabled                           = true
@@ -31,18 +31,18 @@ module "atlas_aws" {
   }
   encryption_at_rest = {
     enabled                    = true
-    aws_kms_key_id             = aws_kms_key.key.arn
     enable_private_endpoint    = true
-    require_private_networking = true
     enabled_for_search_nodes   = true
+    require_private_networking = true
+    aws_kms_key_id             = aws_kms_key.this.arn
   }
 }
 
 module "atlas_cluster" {
-  source = "../../../modules/08_cluster_poc"
+  source = "../../../../modules/08_cluster_poc"
 
-  project_id             = module.atlas_project.id
-  name                   = var.cluster_name
+  project_id = module.atlas_project.id
+  name       = var.cluster_name
   auto_scaling = {
     compute_enabled            = true
     compute_max_instance_size  = "M60"
@@ -56,4 +56,6 @@ module "atlas_cluster" {
     node_count    = 3
   }]
   encryption_at_rest_provider = "AWS"
+
+  depends_on = [module.atlas_aws]
 }

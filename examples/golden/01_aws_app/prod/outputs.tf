@@ -3,8 +3,8 @@ output "atlas_project" {
 }
 
 output "atlas_aws_sensitive" {
-  value     = {
-    aws_config = module.atlas_aws.aws_config
+  value = {
+    aws_config                   = module.atlas_aws.aws_config
     encryption_at_rest_sensitive = module.atlas_aws.encryption_at_rest_sensitive
   }
   sensitive = true

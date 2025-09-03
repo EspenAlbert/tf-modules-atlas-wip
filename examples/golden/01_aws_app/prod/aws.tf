@@ -52,7 +52,7 @@ resource "aws_security_group" "this" {
 data "aws_caller_identity" "current" {}
 
 
-resource "aws_kms_key" "key" {
+resource "aws_kms_key" "this" {
   description = "MongoDB Atlas KMS key."
   policy = jsonencode({
     "Version" : "2012-10-17",

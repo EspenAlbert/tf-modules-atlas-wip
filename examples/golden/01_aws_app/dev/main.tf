@@ -8,6 +8,7 @@ module "atlas_project" {
   dev_ips = var.dev_ips
 }
 
+# example submodule usage
 module "db_user_admin" {
   source            = "../../../../modules/07_atlas_aws/modules/database_user_iam_role"
   project_id        = module.atlas_project.id
@@ -20,14 +21,14 @@ module "db_user_admin" {
   }]
 }
 
-module "cluster" {
+module "atlas_cluster" {
   source = "../../../../modules/08_cluster_poc"
 
   name       = var.cluster_name
   project_id = module.atlas_project.id
   regions = [
     {
-      name          = "US_EAST_1"
+      name          = var.atlas_region
       node_count    = 3
       instance_size = "M10"
       provider_name = "AWS"
