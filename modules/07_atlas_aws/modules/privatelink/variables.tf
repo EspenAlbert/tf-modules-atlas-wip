@@ -11,9 +11,9 @@ variable "atlas_region" {
 }
 
 variable "existing_vpc_endpoint_id" {
-  type    = string
+  type     = string
   nullable = false
-  default = ""
+  default  = ""
 }
 
 variable "add_vpc_cidr_block_project_access" {

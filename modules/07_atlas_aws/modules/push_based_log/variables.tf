@@ -5,7 +5,7 @@ variable "existing_bucket_arn" {
   type        = string
   description = "Existing S3 bucket ARN"
   default     = ""
-  nullable = false
+  nullable    = false
 }
 
 variable "mongodb_role_id" {
@@ -28,7 +28,7 @@ variable "bucket_name" {
   type        = string
   description = "S3 bucket name, use this to create a new bucket"
   default     = ""
-  nullable = false
+  nullable    = false
 }
 
 variable "existing_aws_iam_role_arn" {

@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "log_bucket" {
-  count         = var.create_s3_bucket ? 1 : 0
-  
+  count = var.create_s3_bucket ? 1 : 0
+
   lifecycle {
     precondition {
       condition     = var.existing_bucket_arn == "" && var.bucket_name != ""
@@ -12,9 +12,9 @@ resource "aws_s3_bucket" "log_bucket" {
 }
 
 locals {
-  bucket_arn  = var.create_s3_bucket ? aws_s3_bucket.log_bucket[0].arn: var.existing_bucket_arn
+  bucket_arn  = var.create_s3_bucket ? aws_s3_bucket.log_bucket[0].arn : var.existing_bucket_arn
   bucket_name = var.create_s3_bucket ? var.bucket_name : split("/", local.bucket_arn)[length(split("/", local.bucket_arn)) - 1]
-  role_name = split("/", var.existing_aws_iam_role_arn)[length(split("/", var.existing_aws_iam_role_arn)) - 1]
+  role_name   = split("/", var.existing_aws_iam_role_arn)[length(split("/", var.existing_aws_iam_role_arn)) - 1]
 }
 
 # Add authorization policy to existing IAM role
