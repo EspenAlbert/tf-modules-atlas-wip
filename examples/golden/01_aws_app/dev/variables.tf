@@ -9,6 +9,13 @@ variable "atlas_project_name" {
   description = "Atlas Project Name"
 }
 
+variable "dev_ips" {
+  type = map(object({
+    comment    = string
+    ip_address = string
+  }))
+  default = {}
+}
 variable "cluster_name" {
   type        = string
   description = "Cluster name"
@@ -19,15 +26,6 @@ variable "atlas_region" {
   description = "Atlas region where resources will be created"
 }
 
-variable "mongodb_version" {
-  type        = string
-  description = "MongoDB Version"
-}
-
-variable "aws_iam_role_name" {
-  type        = string
-  description = "Created to be used by the atlas cloud provider"
-}
 
 # AWS VPC config
 variable "vpc_name" {
@@ -39,7 +37,7 @@ variable "vpc_cidr" {
   default = "10.0.0.0/16"
 }
 
-variable "aws_iam_role_arn_ec2" {
+variable "aws_iam_role_app_name" {
   type = string
 }
 

@@ -51,10 +51,12 @@ variable "encryption_at_rest" {
 
 variable "push_based_log_export" {
   type = object({
-    bucket_name        = string
-    prefix_path        = optional(string)
-    enabled            = bool
-    bucket_policy_name = optional(string, "AtlasPushBasedLogPolicy")
+    bucket_name         = optional(string)
+    create_s3_bucket    = optional(bool, false)
+    existing_bucket_arn = optional(string, "")
+    prefix_path         = optional(string)
+    enabled             = bool
+    bucket_policy_name  = optional(string, "AtlasPushBasedLogPolicy")
     timeouts = optional(object({
       create = optional(string)
       delete = optional(string)
@@ -63,7 +65,7 @@ variable "push_based_log_export" {
   })
   default = {
     enabled     = false
-    bucket_name = "not-enabled"
+    bucket_name = ""
   }
 }
 

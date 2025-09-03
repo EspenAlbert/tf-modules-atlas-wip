@@ -1,24 +1,26 @@
 resource "aws_s3_bucket" "log_bucket" {
+  count = var.create_s3_bucket ? 1 : 0
+
   lifecycle {
     precondition {
-      condition     = var.existing_bucket_arn == null && var.bucket_name != null
+      condition     = var.existing_bucket_arn == "" && var.bucket_name != ""
       error_message = "either existing_bucket_arn or bucket_name must be provided"
     }
   }
-  count         = var.existing_bucket_arn == null && var.bucket_name != null ? 1 : 0 # if existing_bucket_arn is provided, we don't need to create a new bucket
   bucket        = var.bucket_name
   force_destroy = true # required for destroying as Atlas may create a test folder in the bucket when push-based log export is set up 
 }
 
 locals {
-  bucket_arn  = var.existing_bucket_arn != null ? var.existing_bucket_arn : aws_s3_bucket.log_bucket[0].arn
-  bucket_name = split("/", local.bucket_arn)[length(split("/", local.bucket_arn)) - 1]
+  bucket_arn  = var.create_s3_bucket ? aws_s3_bucket.log_bucket[0].arn : var.existing_bucket_arn
+  bucket_name = var.create_s3_bucket ? var.bucket_name : split("/", local.bucket_arn)[length(split("/", local.bucket_arn)) - 1]
+  role_name   = split("/", var.existing_aws_iam_role_arn)[length(split("/", var.existing_aws_iam_role_arn)) - 1]
 }
 
 # Add authorization policy to existing IAM role
 resource "aws_iam_role_policy" "s3_bucket_policy" {
   name = var.bucket_policy_name
-  role = var.existing_aws_iam_role_arn
+  role = local.role_name
 
   policy = <<-EOF
   {
@@ -49,4 +51,6 @@ resource "mongodbatlas_push_based_log_export" "this" {
   prefix_path = var.prefix_path
 
   timeouts = var.timeouts
+
+  depends_on = [aws_iam_role_policy.s3_bucket_policy]
 }

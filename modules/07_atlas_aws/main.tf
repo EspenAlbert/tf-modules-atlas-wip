@@ -50,9 +50,11 @@ module "push_based_log_export" {
 
   project_id                = var.project_id
   existing_aws_iam_role_arn = local.aws_iam_role_arn
+  existing_bucket_arn       = var.push_based_log_export.existing_bucket_arn
   mongodb_role_id           = mongodbatlas_cloud_provider_access_authorization.this.role_id
   prefix_path               = var.push_based_log_export.prefix_path
   bucket_name               = var.push_based_log_export.bucket_name
+  create_s3_bucket          = var.push_based_log_export.create_s3_bucket
   bucket_policy_name        = var.push_based_log_export.bucket_policy_name
   timeouts                  = var.push_based_log_export.timeouts
 }
