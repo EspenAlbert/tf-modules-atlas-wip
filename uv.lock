@@ -41,7 +41,7 @@ wheels = [
 
 [[package]]
 name = "atlas-init"
-version = "0.9.0"
+version = "0.10.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "appdirs" },
@@ -53,6 +53,7 @@ dependencies = [
     { name = "model-lib" },
     { name = "motor" },
     { name = "mypy-boto3-cloudformation" },
+    { name = "mypy-boto3-iam" },
     { name = "orjson" },
     { name = "pydantic-settings" },
     { name = "pydot" },
@@ -66,9 +67,9 @@ dependencies = [
     { name = "typer" },
     { name = "zero-3rdparty" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1a/02/ecee833741066c4487b6ac762594b34e7698cb75a68d0c8ff5c961854e93/atlas_init-0.9.0.tar.gz", hash = "sha256:3895fe7b5c13cc721a67991684b205668c54fbd5c10f1b025c40475361efeb32", size = 180369, upload-time = "2025-08-13T13:46:00.456Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/0e/ca/60508a56dc826a16c07facf9bb0270a69dbd66427c843ba44656efd66094/atlas_init-0.10.0.tar.gz", hash = "sha256:bedfa435c3c2c70f38abdfd4a6c224095b5135f499073945344f24a3f41317f5", size = 184417, upload-time = "2025-09-03T05:33:50.498Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/00/08/0a1b7b75e3ecdc15cd6f39b76f7114448d5021c33199ae9bb1bf45487f1b/atlas_init-0.9.0-py3-none-any.whl", hash = "sha256:18ad8f9890ff73502501e9cd4001a9ea22c24dd9d70dd928d22b647bd9e85670", size = 243745, upload-time = "2025-08-13T13:45:58.272Z" },
+    { url = "https://files.pythonhosted.org/packages/a9/33/89f2d508c416ea3a041b17a4c413e229a284a5d897a409c22c5d291cdd16/atlas_init-0.10.0-py3-none-any.whl", hash = "sha256:a14695b0d4d05b38463f683300afc5c88dfb8c90deb7c87468438b445279d12e", size = 249194, upload-time = "2025-09-03T05:33:49.1Z" },
 ]
 
 [[package]]
@@ -445,6 +446,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/4a/43/69eef04d4da88a002b388b1789b766f9f6140cde44491d62f05f579bbe3e/mypy_boto3_cloudformation-1.37.22.tar.gz", hash = "sha256:bf6bed27d1ad82d1156964adabeb0d627b555ab870d689305a160cb93e0ef255", size = 57670, upload-time = "2025-03-27T19:42:28.187Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/49/8b/801446e0ec5174601f04a42679d6051d0f5d3986b0cfbca8a8d994769a87/mypy_boto3_cloudformation-1.37.22-py3-none-any.whl", hash = "sha256:c411740ee8d48cd497a2555fd1a525b6e521631e58a1a7f6c863f5ee6005d178", size = 69619, upload-time = "2025-03-27T19:42:22.825Z" },
+]
+
+[[package]]
+name = "mypy-boto3-iam"
+version = "1.40.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/69/7c/fdec1447883fb90470b7cb1917a32923583e7bcfa4b592e8f9f5871cd1a7/mypy_boto3_iam-1.40.0.tar.gz", hash = "sha256:b900ac557375428f0bbc37aa24fdd2901e2db7018ae44e0aaf99ec0f84a28d44", size = 86593, upload-time = "2025-07-31T19:43:12.695Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0e/b2/ab85f6812bd53d88b7508a2d6601387c9ffccdb73002730686680723f2b1/mypy_boto3_iam-1.40.0-py3-none-any.whl", hash = "sha256:46e354287c93b4f84eef2407076f56cb42e504336eaec114641b1b184808fae8", size = 91992, upload-time = "2025-07-31T19:43:10.783Z" },
 ]
 
 [[package]]
@@ -956,7 +966,7 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "atlas-init", specifier = "==0.9.0" }]
+requires-dist = [{ name = "atlas-init", specifier = "==0.10.0" }]
 
 [package.metadata.requires-dev]
 dev = [

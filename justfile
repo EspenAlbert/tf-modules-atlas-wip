@@ -42,5 +42,33 @@ example-readme *args:
   uv run tf-ext example-readme --example-path {{args}}
 
 [positional-arguments]
+validate *args:
+  export STATIC_DIR="{{justfile_directory()}}/static"; \
+  export CACHE_DIR="{{justfile_directory()}}/cache"; \
+  export REPO_OUT_PATH="{{justfile_directory()}}"; \
+  uv run tf-ext ws --root-path {{args}} validate
+
+[positional-arguments]
+plan *args:
+  export STATIC_DIR="{{justfile_directory()}}/static"; \
+  export CACHE_DIR="{{justfile_directory()}}/cache"; \
+  export REPO_OUT_PATH="{{justfile_directory()}}"; \
+  uv run tf-ext ws --root-path {{args}} plan
+
+[positional-arguments]
+apply *args:
+  export STATIC_DIR="{{justfile_directory()}}/static"; \
+  export CACHE_DIR="{{justfile_directory()}}/cache"; \
+  export REPO_OUT_PATH="{{justfile_directory()}}"; \
+  uv run tf-ext ws --root-path {{args}} apply
+
+[positional-arguments]
+destroy *args:
+  export STATIC_DIR="{{justfile_directory()}}/static"; \
+  export CACHE_DIR="{{justfile_directory()}}/cache"; \
+  export REPO_OUT_PATH="{{justfile_directory()}}"; \
+  uv run tf-ext ws --root-path {{args}} destroy
+
+[positional-arguments]
 tf-ext *args:
   uv run tf-ext {{args}}
