@@ -134,3 +134,17 @@ resource "mongodbatlas_advanced_cluster" "this" {
   timeouts                                         = var.timeouts
   version_release_system                           = var.version_release_system
 }
+
+module "cloud_backup_schedule" {
+  count = var.cloud_backup_schedule_enabled ? 1 : 0
+
+  source = "./modules/cloud_backup_schedule"
+
+  cluster_name = mongodbatlas_advanced_cluster.this.name
+  project_id   = var.project_id
+
+  # TODO: Investigate when different zones use different backup schedulesa
+  default_replication_spec_zone_id       = mongodbatlas_advanced_cluster.this.replication_specs[0].region_configs.*.provider_name[0]
+  default_replication_spec_provider_name = mongodbatlas_advanced_cluster.this.replication_specs[0].region_configs.*.provider_name[0]
+  cloud_backup_schedule                  = var.cloud_backup_schedule
+}
