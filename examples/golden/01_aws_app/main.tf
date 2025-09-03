@@ -10,6 +10,8 @@ module "atlas_aws" {
   source            = "../../../modules/07_atlas_aws"
   project_id        = module.atlas_project.id
   aws_iam_role_name = var.aws_iam_role_name
+  atlas_region      = var.atlas_region
+
   aws_iam_role_db_admin = {
     enabled  = true
     role_arn = var.aws_iam_role_arn_ec2
@@ -19,7 +21,6 @@ module "atlas_aws" {
     enabled     = true
     bucket_name = "my-s3-bucket"
   }
-  atlas_region = var.atlas_region
   privatelink_with_managed_vpc_endpoint = {
     enabled                           = true
     vpc_id                            = module.vpc.vpc_id
@@ -34,4 +35,25 @@ module "atlas_aws" {
     require_private_networking = true
     enabled_for_search_nodes   = true
   }
+}
+
+module "atlas_cluster" {
+  source = "../../../modules/08_cluster_poc"
+
+  project_id             = module.atlas_project.id
+  name                   = var.cluster_name
+  mongo_db_major_version = var.mongodb_version
+
+  auto_scaling = {
+    compute_enabled            = true
+    compute_max_instance_size  = "M60"
+    compute_min_instance_size  = "M30"
+    compute_scale_down_enabled = true
+    disk_gb_enabled            = true
+  }
+  regions = [{
+    name          = var.atlas_region
+    provider_name = "AWS"
+    node_count    = 3
+  }]
 }

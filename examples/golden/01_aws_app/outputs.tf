@@ -5,3 +5,6 @@ output "atlas_aws" {
   value = module.atlas_aws
 }
 
+output "atlas_cluster" {
+  value = module.atlas_cluster
+}

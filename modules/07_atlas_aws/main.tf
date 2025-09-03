@@ -3,6 +3,7 @@ locals {
   aws_iam_role_arn          = local.has_existing_aws_iam_role ? var.existing_aws_iam_role.arn : aws_iam_role.this[0].arn
 }
 
+# tflint-ignore: terraform_unused_declarations
 data "aws_iam_role" "this" {
   count = local.has_existing_aws_iam_role ? 1 : 0
 
@@ -64,6 +65,20 @@ module "privatelink_with_existing_vpc_endpoint" {
   existing_vpc_endpoint_id          = var.privatelink_with_existing_vpc_endpoint.existing_vpc_endpoint_id
   add_vpc_cidr_block_project_access = var.privatelink_with_existing_vpc_endpoint.add_vpc_cidr_block_project_access
   atlas_region                      = var.atlas_region
+}
+
+module "privatelink_with_managed_vpc_endpoint" {
+  source = "./modules/privatelink"
+  count  = var.privatelink_with_managed_vpc_endpoint.enabled ? 1 : 0
+
+  project_id = var.project_id
+  aws_private_endpoint = {
+    security_group_ids = var.privatelink_with_managed_vpc_endpoint.security_group_ids
+    subnet_ids         = var.privatelink_with_managed_vpc_endpoint.subnet_ids
+    vpc_id             = var.privatelink_with_managed_vpc_endpoint.vpc_id
+  }
+  aws_tags     = var.privatelink_with_managed_vpc_endpoint.tags
+  atlas_region = var.atlas_region
 }
 
 module "database_user_iam_role" {

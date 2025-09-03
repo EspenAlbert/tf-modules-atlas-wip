@@ -9,9 +9,9 @@ variable "atlas_project_name" {
   description = "Atlas Project Name"
 }
 
-variable "cluster_instance_size_name" {
+variable "cluster_name" {
   type        = string
-  description = "Cluster instance size name"
+  description = "Cluster name"
 }
 
 variable "atlas_region" {

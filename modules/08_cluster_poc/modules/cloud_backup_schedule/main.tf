@@ -1,22 +1,29 @@
 
 locals {
-  zone_id        = mongodbatlas_advanced_cluster.this.replication_specs[0].zone_id
-  cloud_provider = mongodbatlas_advanced_cluster.this.replication_specs[0].region_configs[0].provider_name
+  validation_errors = compact(concat(
+    [for r in var.cloud_backup_schedule.copy_settings : var.default_replication_spec_zone_id && r.zone_id == null ? "zone_id is required if no default_replication_spec_zone_id is provided" : ""],
+    [for r in var.cloud_backup_schedule.copy_settings : var.default_replication_spec_provider_name && r.cloud_provider == null ? "cloud_provider is required if no default_replication_spec_provider_name is provided" : ""],
+  ))
 }
 
 resource "mongodbatlas_cloud_backup_schedule" "this" {
-  count = var.cloud_backup_schedule_enabled ? 1 : 0
+  lifecycle {
+    precondition {
+      condition     = length(local.validation_errors) == 0
+      error_message = join("\n", local.validation_errors)
+    }
+  }
 
-  cluster_name = mongodbatlas_advanced_cluster.this.name
-  project_id   = mongodbatlas_advanced_cluster.this.project_id
+  cluster_name = var.cluster_name
+  project_id   = var.project_id
 
   auto_export_enabled = var.cloud_backup_schedule.auto_export_enabled
   dynamic "copy_settings" {
     for_each = var.cloud_backup_schedule.copy_settings
     content {
       region_name    = copy_settings.value.region_name
-      cloud_provider = coalesce(copy_settings.value.cloud_provider, local.cloud_provider)
-      zone_id        = coalesce(copy_settings.value.zone_id, local.zone_id)
+      cloud_provider = coalesce(copy_settings.value.cloud_provider, var.default_replication_spec_provider_name)
+      zone_id        = coalesce(copy_settings.value.zone_id, var.default_replication_spec_zone_id)
 
       frequencies        = copy_settings.value.frequencies
       should_copy_oplogs = copy_settings.value.should_copy_oplogs

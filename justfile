@@ -28,7 +28,9 @@ resource-module name:
   uv run tf-ext mod-gen-provider --include-only {{name}}
 
 tflint:
-  cd resource_modules && tflint -f compact --recursive --minimum-failure-severity=warning
+  cd resource_modules && tflint -f compact --recursive --minimum-failure-severity=warning && \
+  cd ../modules && tflint -f compact --recursive --minimum-failure-severity=warning && \
+  cd ../examples/golden && tflint -f compact --recursive --minimum-failure-severity=warning
 
 fmt:
   terraform fmt -recursive ./examples && \
@@ -40,6 +42,34 @@ example-readme *args:
   export CACHE_DIR="{{justfile_directory()}}/cache"; \
   export REPO_OUT_PATH="{{justfile_directory()}}"; \
   uv run tf-ext example-readme --example-path {{args}}
+
+[positional-arguments]
+validate *args:
+  export STATIC_DIR="{{justfile_directory()}}/static"; \
+  export CACHE_DIR="{{justfile_directory()}}/cache"; \
+  export REPO_OUT_PATH="{{justfile_directory()}}"; \
+  uv run tf-ext ws --root-path {{args}} validate
+
+[positional-arguments]
+plan *args:
+  export STATIC_DIR="{{justfile_directory()}}/static"; \
+  export CACHE_DIR="{{justfile_directory()}}/cache"; \
+  export REPO_OUT_PATH="{{justfile_directory()}}"; \
+  uv run tf-ext ws --root-path {{args}} plan
+
+[positional-arguments]
+apply *args:
+  export STATIC_DIR="{{justfile_directory()}}/static"; \
+  export CACHE_DIR="{{justfile_directory()}}/cache"; \
+  export REPO_OUT_PATH="{{justfile_directory()}}"; \
+  uv run tf-ext ws --root-path {{args}} apply
+
+[positional-arguments]
+destroy *args:
+  export STATIC_DIR="{{justfile_directory()}}/static"; \
+  export CACHE_DIR="{{justfile_directory()}}/cache"; \
+  export REPO_OUT_PATH="{{justfile_directory()}}"; \
+  uv run tf-ext ws --root-path {{args}} destroy
 
 [positional-arguments]
 tf-ext *args:
