@@ -11,14 +11,17 @@ locals {
     local.is_geosharded ? "GEOSHARDED" : (local.is_sharded ? "SHARDED" : "REPLICASET")
   )
 
-  unique_zone_names    = local.computed_cluster_type == "GEOSHARDED" ? distinct([for r in local.regions : r.zone_name]) : []
-  unique_shard_indices = local.computed_cluster_type == "SHARDED" ? sort(distinct([for r in local.regions : r.shard_index])) : []
+  unique_zone_names    = local.computed_cluster_type == "GEOSHARDED" ? sort(distinct([for r in local.regions : r.zone_name if r.zone_name != null])) : []
+  unique_shard_indices = local.computed_cluster_type == "SHARDED" ? sort(distinct([for r in local.regions : r.shard_index if r.shard_index != null])) : []
+  # list of lists of regions, grouped by cluster type
+  cluster_type_regions = {
+    REPLICASET = [local.regions]
+    # unique_shard_indices is a list of strings, so we need to use _ to ignore the value
+    SHARDED    = [for idx, _ in local.unique_shard_indices : [for r in local.regions : r if r.shard_index == idx]]
+    GEOSHARDED = [for z in local.unique_zone_names : [for r in local.regions : r if r.zone_name == z]]
+  }
 
-  grouped_regions = local.computed_cluster_type == "REPLICASET" ? [local.regions] : (
-    local.computed_cluster_type == "SHARDED"
-    ? [for idx in local.unique_shard_indices : [for r in local.regions : r if r.shard_index == idx]]
-    : [for z in local.unique_zone_names : [for r in local.regions : r if r.zone_name == z]]
-  )
+  grouped_regions = local.cluster_type_regions[local.computed_cluster_type]
 
   // Build replication_specs matching the provider schema
   replication_specs_built = tolist([
@@ -32,9 +35,7 @@ locals {
           auto_scaling           = var.auto_scaling
           analytics_auto_scaling = var.auto_scaling_analytics
           electable_specs = r.node_count != null ? {
-            disk_iops       = null
-            disk_size_gb    = var.disk_size_gb
-            ebs_volume_type = null
+            disk_size_gb = var.disk_size_gb
             instance_size = var.auto_scaling == null ? coalesce(r.instance_size, var.instance_size, local.DEFAULT_INSTANCE_SIZE) : coalesce(
               try(local.existing_cluster.old_cluster.replication_specs[shard_index].region_configs[region_index].electable_specs.instance_size, null),
               var.auto_scaling.compute_min_instance_size
@@ -42,9 +43,7 @@ locals {
             node_count = r.node_count
           } : null
           read_only_specs = r.node_count_read_only != null ? {
-            disk_iops       = null
-            disk_size_gb    = var.disk_size_gb
-            ebs_volume_type = null
+            disk_size_gb = var.disk_size_gb
             instance_size = var.auto_scaling == null ? coalesce(r.instance_size, var.instance_size, local.DEFAULT_INSTANCE_SIZE) : coalesce(
               try(local.existing_cluster.old_cluster.replication_specs[shard_index].region_configs[region_index].electable_specs.instance_size, null),
               var.auto_scaling.compute_min_instance_size
@@ -52,9 +51,7 @@ locals {
             node_count = r.node_count_read_only
           } : null
           analytics_specs = r.node_count_analytics != null ? {
-            disk_iops       = null
-            disk_size_gb    = var.disk_size_gb
-            ebs_volume_type = null
+            disk_size_gb = var.disk_size_gb
             instance_size = var.auto_scaling_analytics == null ? coalesce(r.instance_size_analytics, var.instance_size_analytics, local.DEFAULT_INSTANCE_SIZE) : coalesce(
               try(local.existing_cluster.old_cluster.replication_specs[shard_index].region_configs[region_index].analytics_specs.instance_size, null),
               var.auto_scaling_analytics.compute_min_instance_size
@@ -66,6 +63,7 @@ locals {
     }
   ])
   replication_specs_resource_var_used = length(var.replication_specs) > 0
+  replication_specs_json              = local.replication_specs_resource_var_used ? jsonencode(var.replication_specs) : jsonencode(local.replication_specs_built) # avoids "Mismatched list element types"
 
   // Validation messages (non-empty strings represent errors)
   validation_errors = compact(concat(
@@ -114,7 +112,7 @@ resource "mongodbatlas_advanced_cluster" "this" {
   cluster_type                                     = local.computed_cluster_type
   name                                             = var.name
   project_id                                       = var.project_id
-  replication_specs                                = local.replication_specs_resource_var_used ? var.replication_specs : local.replication_specs_built
+  replication_specs                                = jsondecode(local.replication_specs_json)
   accept_data_risks_and_force_replica_set_reconfig = var.accept_data_risks_and_force_replica_set_reconfig
   advanced_configuration                           = var.advanced_configuration
   backup_enabled                                   = var.backup_enabled
