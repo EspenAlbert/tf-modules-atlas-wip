@@ -5,6 +5,7 @@ locals {
   kms_key_id             = try(local.create_kms_key ? aws_kms_key.this[0].id : var.aws_encryption_at_rest.customer_master_key_id, null)
 }
 
+# tflint-ignore: terraform_unused_declarations
 data "aws_iam_role" "this" {
   count = var.existing_aws_iam_role_arn != null ? 1 : 0
 
@@ -34,4 +35,3 @@ resource "mongodbatlas_cloud_provider_access_authorization" "this" {
     iam_assumed_role_arn = local.aws_iam_role_arn
   }
 }
-

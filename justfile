@@ -28,7 +28,8 @@ resource-module name:
   uv run tf-ext mod-gen-provider --include-only {{name}}
 
 tflint:
-  cd resource_modules && tflint -f compact --recursive --minimum-failure-severity=warning
+  cd resource_modules && tflint -f compact --recursive --minimum-failure-severity=warning && \
+  cd ../modules && tflint -f compact --recursive --minimum-failure-severity=warning
 
 fmt:
   terraform fmt -recursive ./examples && \

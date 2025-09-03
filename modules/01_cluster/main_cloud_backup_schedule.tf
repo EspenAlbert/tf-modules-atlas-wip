@@ -1,7 +1,7 @@
 
 locals {
-  zone_id        = mongodbatlas_advanced_cluster.this.replication_specs.*.zone_id[0]
-  cloud_provider = mongodbatlas_advanced_cluster.this.replication_specs[0].region_configs.*.provider_name[0]
+  zone_id        = mongodbatlas_advanced_cluster.this.replication_specs[0].zone_id
+  cloud_provider = mongodbatlas_advanced_cluster.this.replication_specs[0].region_configs[0].provider_name
 }
 
 resource "mongodbatlas_cloud_backup_schedule" "this" {
