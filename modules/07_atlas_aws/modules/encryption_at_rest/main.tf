@@ -1,6 +1,10 @@
+locals {
+  role_name = split("/", var.existing_aws_iam_role_arn)[length(split("/", var.existing_aws_iam_role_arn)) - 1]
+}
+
 resource "aws_iam_role_policy" "encryption_at_rest_policy" {
   name = var.aws_iam_role_policy_name
-  role = var.existing_aws_iam_role_arn
+  role = local.role_name
 
   policy = jsonencode({
     "Version" : "2012-10-17",

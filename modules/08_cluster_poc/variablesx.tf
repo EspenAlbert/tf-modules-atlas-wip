@@ -33,8 +33,7 @@ variable "advanced_configuration" {
 variable "backup_enabled" {
   description = "Flag that indicates whether the cluster can perform backups. If set to `true`, the cluster can perform backups. You must set this value to `true` for NVMe clusters. Backup uses [Cloud Backups](https://docs.atlas.mongodb.com/backup/cloud-backup/overview/) for dedicated clusters and [Shared Cluster Backups](https://docs.atlas.mongodb.com/backup/shared-tier/overview/) for tenant clusters. If set to `false`, the cluster doesn't use backups."
   type        = bool
-  nullable    = true
-  default     = null
+  default     = true
 }
 
 variable "bi_connector_config" {
@@ -232,8 +231,7 @@ variable "replication_specs" {
 variable "retain_backups_enabled" {
   description = "Flag that indicates whether to retain backup snapshots for the deleted dedicated cluster."
   type        = bool
-  nullable    = true
-  default     = null
+  default     = true
 }
 
 variable "root_cert_type" {

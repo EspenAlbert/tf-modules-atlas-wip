@@ -4,7 +4,8 @@ variable "project_id" {
 variable "existing_bucket_arn" {
   type        = string
   description = "Existing S3 bucket ARN"
-  default     = null
+  default     = ""
+  nullable = false
 }
 
 variable "mongodb_role_id" {
@@ -18,10 +19,16 @@ variable "prefix_path" {
   default     = "push-based-log-test"
 }
 
+variable "create_s3_bucket" {
+  type        = bool
+  description = "Create a new S3 bucket"
+  default     = false
+}
 variable "bucket_name" {
   type        = string
   description = "S3 bucket name, use this to create a new bucket"
-  default     = null
+  default     = ""
+  nullable = false
 }
 
 variable "existing_aws_iam_role_arn" {

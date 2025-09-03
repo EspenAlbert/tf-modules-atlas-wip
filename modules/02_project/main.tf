@@ -29,3 +29,13 @@ resource "mongodbatlas_project" "this" {
   with_default_alerts_settings = var.with_default_alerts_settings
 }
 
+module "ip_access_entry" {
+  source = "./modules/ip_access_entry"
+  for_each = var.dev_ips
+
+  ip_access_entry = {
+    comment = each.value.comment
+    ip_address = each.value.ip_address
+    project_id = mongodbatlas_project.this.id
+  }
+}
