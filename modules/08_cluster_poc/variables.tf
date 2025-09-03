@@ -1,9 +1,4 @@
 ## CONDITIONAL RESOURCES
-variable "cloud_backup_schedule_enabled" {
-  type    = bool
-  default = false
-}
-
 variable "search_deployment_enabled" {
   type    = bool
   default = false
@@ -25,6 +20,11 @@ variable "search_deployment" {
   })
   nullable = true
   default  = null
+}
+
+variable "cloud_backup_schedule_enabled" {
+  type    = bool
+  default = false
 }
 
 # duplicate of the one in modules/cloud_backup_schedule/variables.tf
@@ -98,8 +98,6 @@ EOT
     instance_size_analytics = optional(string)
     zone_name               = optional(string)
   }))
-  nullable = true
-  default  = null
 }
 
 variable "provider_name" {

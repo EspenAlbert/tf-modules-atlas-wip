@@ -64,11 +64,14 @@ locals {
   ])
   replication_specs_resource_var_used = length(var.replication_specs) > 0
   replication_specs_json              = local.replication_specs_resource_var_used ? jsonencode(var.replication_specs) : jsonencode(local.replication_specs_built) # avoids "Mismatched list element types"
+  empty_region_configs                = local.replication_specs_resource_var_used ? [] : [for idx, r in local.replication_specs_built : "replication_specs[${idx}].region_configs is empty" if length(r.region_configs) == 0]
 
   // Validation messages (non-empty strings represent errors)
   validation_errors = compact(concat(
+    local.empty_region_configs,
+
     // Mutual exclusivity
-    var.regions != null && local.replication_specs_resource_var_used ? ["Cannot use var.regions and var.replication_specs together"] : [],
+    length(var.regions) > 0 && local.replication_specs_resource_var_used ? ["Cannot use var.regions and var.replication_specs together, set regions=[] to use var.replication_specs"] : [],
     var.auto_scaling != null && var.instance_size != null ? ["Cannot use var.auto_scaling and var.instance_size together"] : [],
     var.auto_scaling_analytics != null && var.instance_size_analytics != null ? ["Cannot use var.auto_scaling_analytics and var.instance_size_analytics together"] : [],
 
@@ -142,9 +145,9 @@ module "cloud_backup_schedule" {
   cluster_name = mongodbatlas_advanced_cluster.this.name
   project_id   = var.project_id
 
-  # TODO: Investigate when different zones use different backup schedulesa
-  default_replication_spec_zone_id       = mongodbatlas_advanced_cluster.this.replication_specs[0].region_configs.*.provider_name[0]
-  default_replication_spec_provider_name = mongodbatlas_advanced_cluster.this.replication_specs[0].region_configs.*.provider_name[0]
+  # TODO: Investigate when different zones use different backup schedules
+  default_replication_spec_zone_id       = mongodbatlas_advanced_cluster.this.replication_specs[0].zone_id
+  default_replication_spec_provider_name = mongodbatlas_advanced_cluster.this.replication_specs[0].region_configs[0].provider_name
   cloud_backup_schedule                  = var.cloud_backup_schedule
 }
 
