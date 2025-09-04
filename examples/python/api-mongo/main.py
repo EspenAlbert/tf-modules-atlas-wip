@@ -32,12 +32,17 @@ ALL_METHODS = [
 
 @app.api_route("/{path:path}", methods=ALL_METHODS)
 def health_check(request: Request, path: str = "") -> dict:
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(levelname)-7s %(threadName)-s %(name)-s %(lineno)-s %(message)-s",
+        force=True,
+    )
     host = (
         request.headers.get("host")
         or request.headers.get("Host")
         or request.url.hostname
     )
-    url = f"{host}{path}" if path else host
+    url = f"{host}/{path}" if path else host
     logger.info(f"sample for {url}")
     client = MongoClient(
         settings.mongo_url, serverSelectionTimeoutMS=5000
