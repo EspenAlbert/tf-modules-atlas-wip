@@ -79,8 +79,9 @@ module "privatelink_with_managed_vpc_endpoint" {
     subnet_ids         = var.privatelink_with_managed_vpc_endpoint.subnet_ids
     vpc_id             = var.privatelink_with_managed_vpc_endpoint.vpc_id
   }
-  aws_tags     = var.privatelink_with_managed_vpc_endpoint.tags
-  atlas_region = var.atlas_region
+  add_vpc_cidr_block_project_access = var.privatelink_with_managed_vpc_endpoint.add_vpc_cidr_block_project_access
+  aws_tags                          = var.privatelink_with_managed_vpc_endpoint.tags
+  atlas_region                      = var.atlas_region
 }
 
 module "database_user_iam_role" {
