@@ -1,0 +1,8 @@
+services:
+
+  api-mongo-lambda:
+    build:
+      context: .
+      dockerfile: Dockerfile_lambda
+    environment:
+      mongo_url: mongodb://user:pass@mongo-test:27017?retryWrites=true&w=majority&authSource=admin
