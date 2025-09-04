@@ -1,8 +1,3 @@
-variable "image_uri" {
-  description = "ECR URI with image and tag"
-  type        = string
-}
-
 locals {
   image_without_tag = split(":", var.image_uri)[0]
   repo_url_names    = { for repo in aws_ecr_repository.repos : repo.repository_url => repo.name }
@@ -11,13 +6,8 @@ locals {
   policy_arns = {
     cloudwatch_logs_policy = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
     ecr_pull               = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+    vpc_access             = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
   }
-}
-
-variable "env_vars" {
-  type      = map(string)
-  default   = {}
-  sensitive = true
 }
 
 resource "aws_iam_role" "lambda_exec" {
@@ -36,9 +26,24 @@ resource "aws_iam_role" "lambda_exec" {
 EOF
 }
 
+resource "aws_security_group" "lambda_sg" {
+  name        = "lambda-sg-${local.name}"
+  description = "Allow Lambda outbound traffic"
+  vpc_id      = var.vpc_id
+  # Lambda functions do not require inbound rules.
+  # Allow all outbound traffic so the Lambda can reach private resources.
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+
 resource "aws_iam_role_policy_attachment" "attachments" {
-  for_each   = local.policy_arns
-  
+  for_each = local.policy_arns
+
   policy_arn = each.value
   role       = aws_iam_role.lambda_exec.name
 }
@@ -51,9 +56,14 @@ resource "aws_lambda_function" "app" {
   architectures = ["arm64"]
   timeout       = 30 # adjust as needed
   memory_size   = 512
-  
+
   environment {
     variables = var.env_vars
+  }
+
+  vpc_config {
+    subnet_ids         = var.vpc_subnet_ids
+    security_group_ids = [aws_security_group.lambda_sg.id]
   }
 }
 
