@@ -1,4 +1,7 @@
-formatter: markdown document
+formatter: markdown table
+sections:
+  hide:
+  -  "modules"
 output:
   file: "README.md"
   mode: inject
