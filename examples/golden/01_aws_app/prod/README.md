@@ -146,4 +146,5 @@ graph TD
 | <a name="output_atlas_aws_sensitive"></a> [atlas\_aws\_sensitive](#output\_atlas\_aws\_sensitive) | n/a |
 | <a name="output_atlas_cluster"></a> [atlas\_cluster](#output\_atlas\_cluster) | n/a |
 | <a name="output_atlas_project"></a> [atlas\_project](#output\_atlas\_project) | n/a |
+| <a name="output_vpc_output"></a> [vpc\_output](#output\_vpc\_output) | n/a |
 <!-- END_TF_DOCS -->
