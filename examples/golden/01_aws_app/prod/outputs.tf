@@ -26,3 +26,11 @@ output "atlas_aws_non_sensitive" {
 output "atlas_cluster" {
   value = module.atlas_cluster
 }
+
+output "vpc_output" {
+  value = {
+    vpc_id             = module.vpc.vpc_id
+    private_subnet_ids = module.vpc.private_subnets
+    region             = local.aws_region
+  }
+}

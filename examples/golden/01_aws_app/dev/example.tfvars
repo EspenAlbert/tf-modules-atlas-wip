@@ -1,6 +1,6 @@
 atlas_org_id          = "MY_ORG_ID"
 atlas_project_name    = "golden-aws-dev"
-atlas_region          = "US_WEST_2"
+atlas_region          = "US_EAST_1"
 vpc_name              = "golden-aws-vpc-dev"
 aws_iam_role_app_name = "golden-aws-app-dev"
 cluster_name          = "golden-aws-cluster-dev"

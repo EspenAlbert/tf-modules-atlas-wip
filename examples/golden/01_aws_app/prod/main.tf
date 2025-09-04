@@ -27,7 +27,7 @@ module "atlas_aws" {
     vpc_id                            = module.vpc.vpc_id
     subnet_ids                        = module.vpc.private_subnets
     security_group_ids                = [aws_security_group.this.id]
-    add_vpc_cidr_block_project_access = true
+    add_vpc_cidr_block_project_access = false
   }
   encryption_at_rest = {
     enabled                    = true

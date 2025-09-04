@@ -1,0 +1,8 @@
+services:
+  example:
+    build:
+      context: .
+    environment:
+      mongo_url: ${MONGO_URL}
+    ports:
+      - 8000:8000

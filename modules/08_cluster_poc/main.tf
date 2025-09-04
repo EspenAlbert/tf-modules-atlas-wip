@@ -45,7 +45,7 @@ locals {
           read_only_specs = r.node_count_read_only != null ? {
             disk_size_gb = var.disk_size_gb
             instance_size = var.auto_scaling == null ? coalesce(r.instance_size, var.instance_size, local.DEFAULT_INSTANCE_SIZE) : coalesce(
-              try(local.existing_cluster.old_cluster.replication_specs[shard_index].region_configs[region_index].electable_specs.instance_size, null),
+              try(local.existing_cluster.old_cluster.replication_specs[shard_index].region_configs[region_index].read_only_specs.instance_size, null),
               var.auto_scaling.compute_min_instance_size
             )
             node_count = r.node_count_read_only
