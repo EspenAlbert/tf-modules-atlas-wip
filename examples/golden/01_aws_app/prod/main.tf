@@ -20,7 +20,7 @@ module "atlas_aws" {
 
   aws_iam_role_db_admin = {
     enabled  = true
-    role_arn = aws_iam_role.app_role.arn
+    role_arn = aws_iam_role.lambda_exec.arn
   }
 
   push_based_log_export = {

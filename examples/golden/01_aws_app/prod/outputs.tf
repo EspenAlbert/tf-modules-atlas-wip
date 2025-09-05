@@ -36,3 +36,7 @@ output "vpc_output" {
     region             = local.aws_region
   }
 }
+
+output "aws_iam_role_app_arn" {
+  value = aws_iam_role.lambda_exec.arn
+}
