@@ -8,6 +8,9 @@ locals {
 }
 provider "aws" {
   region = local.aws_region
+  default_tags {
+    tags = var.tags
+  }
 }
 
 data "aws_availability_zones" "available" {}

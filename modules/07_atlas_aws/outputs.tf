@@ -1,19 +1,27 @@
-output "aws_config" {
+output "access_setup_aws_config" {
   value     = mongodbatlas_cloud_provider_access_setup.this.aws_config
   sensitive = true
 }
 
-output "created_date" {
+output "access_setup_created_date" {
   value = mongodbatlas_cloud_provider_access_setup.this.created_date
 }
 
-output "last_updated_date" {
+output "access_setup_last_updated_date" {
   value = mongodbatlas_cloud_provider_access_setup.this.last_updated_date
 }
 
 output "role_id" {
-  value = mongodbatlas_cloud_provider_access_setup.this.role_id
+  value = mongodbatlas_cloud_provider_access_authorization.this.role_id
 }
+output "access_authorization_authorized_date" {
+  value = mongodbatlas_cloud_provider_access_authorization.this.authorized_date
+}
+
+output "access_authorization_feature_usages" {
+  value = mongodbatlas_cloud_provider_access_authorization.this.feature_usages
+}
+
 
 output "aws_iam_role_arn" {
   value = local.aws_iam_role_arn

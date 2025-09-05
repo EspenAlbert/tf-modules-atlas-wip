@@ -47,7 +47,7 @@ resource "aws_iam_role_policy" "s3_bucket_policy" {
 resource "mongodbatlas_push_based_log_export" "this" {
   project_id  = var.project_id
   bucket_name = local.bucket_name
-  iam_role_id = var.mongodb_role_id
+  iam_role_id = var.atlas_role_id
   prefix_path = var.prefix_path
 
   timeouts = var.timeouts

@@ -40,8 +40,12 @@ module "encryption_at_rest" {
   enabled_for_search_nodes   = var.encryption_at_rest.enabled_for_search_nodes
   enable_private_endpoint    = var.encryption_at_rest.enable_private_endpoint
   existing_aws_iam_role_arn  = local.aws_iam_role_arn
-  mongodb_role_id            = mongodbatlas_cloud_provider_access_authorization.this.role_id
+  atlas_role_id              = mongodbatlas_cloud_provider_access_authorization.this.role_id
   require_private_networking = var.encryption_at_rest.require_private_networking
+
+  # Adding an explicit dependency for the authorization to ensure the role_id has been authorized
+  # Since the role_id from the authorization comes from setup resource Terraform doesn't infer this by default
+  depends_on = [mongodbatlas_cloud_provider_access_authorization.this]
 }
 
 module "push_based_log_export" {
@@ -51,12 +55,16 @@ module "push_based_log_export" {
   project_id                = var.project_id
   existing_aws_iam_role_arn = local.aws_iam_role_arn
   existing_bucket_arn       = var.push_based_log_export.existing_bucket_arn
-  mongodb_role_id           = mongodbatlas_cloud_provider_access_authorization.this.role_id
+  atlas_role_id             = mongodbatlas_cloud_provider_access_authorization.this.role_id
   prefix_path               = var.push_based_log_export.prefix_path
   bucket_name               = var.push_based_log_export.bucket_name
   create_s3_bucket          = var.push_based_log_export.create_s3_bucket
   bucket_policy_name        = var.push_based_log_export.bucket_policy_name
   timeouts                  = var.push_based_log_export.timeouts
+
+  # Adding an explicit dependency for the authorization to ensure the role_id has been authorized
+  # Since the role_id from the authorization comes from setup resource Terraform doesn't infer this by default
+  depends_on = [mongodbatlas_cloud_provider_access_authorization.this]
 }
 
 module "privatelink_with_existing_vpc_endpoint" {

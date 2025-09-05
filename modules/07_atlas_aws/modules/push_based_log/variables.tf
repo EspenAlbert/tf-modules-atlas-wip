@@ -8,9 +8,9 @@ variable "existing_bucket_arn" {
   nullable    = false
 }
 
-variable "mongodb_role_id" {
+variable "atlas_role_id" {
   type        = string
-  description = "MongoDB role ID"
+  description = "Atlas Cloud Provider role ID"
 }
 
 variable "prefix_path" {

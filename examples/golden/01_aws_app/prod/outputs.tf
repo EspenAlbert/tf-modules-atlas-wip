@@ -4,7 +4,7 @@ output "atlas_project" {
 
 output "atlas_aws_sensitive" {
   value = {
-    aws_config                   = module.atlas_aws.aws_config
+    access_setup_aws_config      = module.atlas_aws.access_setup_aws_config
     encryption_at_rest_sensitive = module.atlas_aws.encryption_at_rest_sensitive
   }
   sensitive = true
@@ -12,14 +12,16 @@ output "atlas_aws_sensitive" {
 
 output "atlas_aws_non_sensitive" {
   value = {
-    created_date                           = module.atlas_aws.created_date
-    last_updated_date                      = module.atlas_aws.last_updated_date
-    role_id                                = module.atlas_aws.role_id
+    access_setup_created_date              = module.atlas_aws.access_setup_created_date
+    access_setup_last_updated_date         = module.atlas_aws.access_setup_last_updated_date
+    access_authorization_authorized_date   = module.atlas_aws.access_authorization_authorized_date
+    access_authorization_feature_usages    = module.atlas_aws.access_authorization_feature_usages
     aws_iam_role_arn                       = module.atlas_aws.aws_iam_role_arn
-    push_based_log_export                  = module.atlas_aws.push_based_log_export
     encryption_at_rest                     = module.atlas_aws.encryption_at_rest_non_sensitive
     privatelink_with_existing_vpc_endpoint = module.atlas_aws.privatelink_with_existing_vpc_endpoint
     privatelink_with_managed_vpc_endpoint  = module.atlas_aws.privatelink_with_managed_vpc_endpoint
+    push_based_log_export                  = module.atlas_aws.push_based_log_export
+    role_id                                = module.atlas_aws.role_id
   }
 }
 

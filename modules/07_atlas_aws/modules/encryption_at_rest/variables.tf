@@ -6,7 +6,7 @@ variable "atlas_region" {
   type = string
 }
 
-variable "mongodb_role_id" {
+variable "atlas_role_id" {
   type = string
 }
 

@@ -6,3 +6,9 @@ vpc_name              = "golden-aws-vpc"
 aws_iam_role_app_name = "golden-aws-app"
 cluster_name          = "golden-aws-cluster"
 log_bucket_name       = "atlas-golden-aws-log-bucket" # change me
+tags = {
+  Environment = "Production"
+  Team        = "TeamA"
+  App         = "ProductManagementApp"
+  Version     = "1.0.0"
+}

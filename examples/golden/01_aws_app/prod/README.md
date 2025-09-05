@@ -47,18 +47,15 @@ vpc (1️⃣)
 │       ├── module.privatelink_with_managed_vpc_endpoint.data.aws_vpc.this
 │       │   └── module.privatelink_with_managed_vpc_endpoint.mongodbatlas_project_ip_access_list.access_list_vpc_cidr_block
 │       └── module.privatelink_with_managed_vpc_endpoint.mongodbatlas_privatelink_endpoint_service.private_endpoint
-├── module.push_based_log_export.aws_s3_bucket.log_bucket
-│   └── module.push_based_log_export.aws_iam_role_policy.s3_bucket_policy
-│       └── module.push_based_log_export.mongodbatlas_push_based_log_export.this
 ├── mongodbatlas_cloud_provider_access_setup.this
 │   └── aws_iam_role.this
-│       ├── module.encryption_at_rest.aws_iam_role_policy.encryption_at_rest_policy
-│       ├── module.push_based_log_export.aws_iam_role_policy.s3_bucket_policy
-│       │   └── module.push_based_log_export.mongodbatlas_push_based_log_export.this
 │       └── mongodbatlas_cloud_provider_access_authorization.this
+│           ├── module.encryption_at_rest.aws_iam_role_policy.encryption_at_rest_policy
 │           ├── module.encryption_at_rest.mongodbatlas_encryption_at_rest.this
 │           │   └── module.encryption_at_rest.mongodbatlas_encryption_at_rest_private_endpoint.this
-│           └── module.push_based_log_export.mongodbatlas_push_based_log_export.this
+│           └── module.push_based_log_export.aws_s3_bucket.log_bucket
+│               └── module.push_based_log_export.aws_iam_role_policy.s3_bucket_policy
+│                   └── module.push_based_log_export.mongodbatlas_push_based_log_export.this
 └── data.aws_iam_role.this
 08_cluster_poc (3️⃣)
 └── data.mongodbatlas_advanced_clusters.this
