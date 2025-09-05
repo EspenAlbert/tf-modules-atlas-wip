@@ -1,13 +1,25 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "= 5.22.0"
+    }
+  }
+
+  required_version = "~> 1.5"
+}
+
+provider "aws" {
+  region = var.aws_region
+}
 locals {
   image_without_tag = split(":", var.image_uri)[0]
-  repo_url_names    = { for repo in aws_ecr_repository.repos : repo.repository_url => repo.name }
-  name              = local.repo_url_names[local.image_without_tag]
-  log_group_name    = "/aws/lambda/${local.name}"
+  log_group_name    = "/aws/lambda/${var.name}"
 }
 
 
 resource "aws_security_group" "lambda_sg" {
-  name        = "lambda-sg-${local.name}"
+  name        = "lambda-sg-${var.name}"
   description = "Allow Lambda outbound traffic"
   vpc_id      = var.vpc_id
   # Lambda functions do not require inbound rules.
@@ -21,7 +33,7 @@ resource "aws_security_group" "lambda_sg" {
 }
 
 resource "aws_lambda_function" "app" {
-  function_name = local.name
+  function_name = var.name
   package_type  = "Image"
   role          = var.lambda_execution_role_arn
   image_uri     = var.image_uri

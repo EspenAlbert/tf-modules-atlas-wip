@@ -18,7 +18,14 @@ push-lambda tag: build-lambda
     && docker tag api-mongo-lambda:latest ${repo_url} \
     && docker push ${repo_url}
 
-update-vars-auto tag:
+tf-vars-auto-ecr:
+  cd tf_ecr \
+  && cat terraform.tfvars.json.template \
+  | jq --arg aws_region "${AWS_REGION}" \
+       --arg ecr_repo "${ECR_REPOSITORY_NAME:=api-mongo-python}" \
+       '.ecr_repos[0] = $ecr_repo | .aws_region = $aws_region' > terraform.auto.tfvars.json
+
+tf-vars-auto-lambda tag:
   #!/usr/bin/env bash
   set -euo pipefail
   # Validate required environment variables
@@ -30,7 +37,7 @@ update-vars-auto tag:
   : "${VPC_SUBNET_IDS?Error: VPC_SUBNET_IDS is required}"
   : "${MONGO_URL?Error: MONGO_URL is required}"
   : "${LAMBDA_EXECUTION_ROLE_ARN?Error: LAMBDA_EXECUTION_ROLE_ARN is required}"
-  cd tf \
+  cd tf_lambda \
   && cat terraform.tfvars.json.template \
   | jq --arg aws_account_id "${AWS_ACCOUNT_ID}" \
        --arg aws_region "${AWS_REGION}" \
@@ -40,8 +47,7 @@ update-vars-auto tag:
        --arg vpc_subnet_ids "${VPC_SUBNET_IDS}" \
        --arg mongo_url "${MONGO_URL}" \
        --arg lambda_role "${LAMBDA_EXECUTION_ROLE_ARN}" \
-       '.ecr_repos[0] = $ecr_repo
-       | .aws_region = $aws_region
+       '.aws_region = $aws_region
        | .image_uri = "\($aws_account_id).dkr.ecr.\($aws_region).amazonaws.com/\($ecr_repo):\($image_tag)"
        | .vpc_subnet_ids = ($vpc_subnet_ids | split(","))
        | .vpc_id = $vpc_id

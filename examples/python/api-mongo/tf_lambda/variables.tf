@@ -1,12 +1,12 @@
-variable "ecr_repos" {
-  type = list(string)
-}
-
 variable "aws_region" {
   type = string
 }
 
-# LAMBDA
+variable "name" {
+  type    = string
+  default = "api-mongo-python"
+}
+
 variable "image_uri" {
   description = "ECR URI with image and tag"
   type        = string
