@@ -26,3 +26,7 @@ variable "env_vars" {
   default   = {}
   sensitive = true
 }
+
+variable "lambda_execution_role_arn" {
+  type = string
+}

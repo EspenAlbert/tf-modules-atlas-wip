@@ -3,28 +3,8 @@ locals {
   repo_url_names    = { for repo in aws_ecr_repository.repos : repo.repository_url => repo.name }
   name              = local.repo_url_names[local.image_without_tag]
   log_group_name    = "/aws/lambda/${local.name}"
-  policy_arns = {
-    cloudwatch_logs_policy = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-    ecr_pull               = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-    vpc_access             = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
-  }
 }
 
-resource "aws_iam_role" "lambda_exec" {
-  name               = "lambda_exec_role"
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": { "Service": "lambda.amazonaws.com" },
-      "Effect": "Allow"
-    }
-  ]
-}
-EOF
-}
 
 resource "aws_security_group" "lambda_sg" {
   name        = "lambda-sg-${local.name}"
@@ -40,18 +20,10 @@ resource "aws_security_group" "lambda_sg" {
   }
 }
 
-
-resource "aws_iam_role_policy_attachment" "attachments" {
-  for_each = local.policy_arns
-
-  policy_arn = each.value
-  role       = aws_iam_role.lambda_exec.name
-}
-
 resource "aws_lambda_function" "app" {
   function_name = local.name
   package_type  = "Image"
-  role          = aws_iam_role.lambda_exec.arn
+  role          = var.lambda_execution_role_arn
   image_uri     = var.image_uri
   architectures = ["arm64"]
   timeout       = 30 # adjust as needed
