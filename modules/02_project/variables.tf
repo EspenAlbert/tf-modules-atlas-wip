@@ -1,3 +1,42 @@
+# Conditional resource vars
+# IP Access
+variable "dev_ips" {
+  type = map(object({
+    comment    = string
+    ip_address = string
+  }))
+  default = {}
+}
+
+variable "access_cidrs" {
+  type = map(object({
+    comment    = optional(string, "Added by project module")
+    cidr_block = string
+  }))
+  default = {}
+}
+
+# Auditing
+variable "auditing" {
+  type = object({
+    audit_authorization_success = optional(bool)
+    audit_filter                = optional(string)
+    # enabled                     = optional(bool)
+    # project_id                  = string
+  })
+  default = {
+    audit_authorization_success = null
+    audit_filter                = null
+  }
+}
+
+variable "auditing_enabled" {
+  type    = bool
+  default = false
+}
+
+
+# Project Vars
 variable "name" {
   type = string
 }

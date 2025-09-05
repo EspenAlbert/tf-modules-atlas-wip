@@ -4,6 +4,12 @@ module "atlas_project" {
   org_id           = var.atlas_org_id
   auditing_enabled = true
   tags             = var.tags
+  access_cidrs = {
+    vpc_cidr = {
+      comment    = "Private VPC CIDR"
+      cidr_block = module.vpc.vpc_cidr_block
+    }
+  }
 }
 
 module "atlas_aws" {
@@ -23,11 +29,10 @@ module "atlas_aws" {
     bucket_name      = var.log_bucket_name
   }
   privatelink_with_managed_vpc_endpoint = {
-    enabled                           = true
-    vpc_id                            = module.vpc.vpc_id
-    subnet_ids                        = module.vpc.private_subnets
-    security_group_ids                = [aws_security_group.this.id]
-    add_vpc_cidr_block_project_access = false
+    enabled            = true
+    vpc_id             = module.vpc.vpc_id
+    subnet_ids         = module.vpc.private_subnets
+    security_group_ids = [aws_security_group.this.id]
   }
   encryption_at_rest = {
     enabled                    = true

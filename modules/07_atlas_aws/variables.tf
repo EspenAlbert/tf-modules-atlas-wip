@@ -90,12 +90,12 @@ variable "privatelink_with_existing_vpc_endpoint" {
 
 variable "privatelink_with_managed_vpc_endpoint" {
   type = object({
-    enabled                           = optional(bool)
+    enabled                           = optional(bool, true)
     vpc_id                            = optional(string)
     subnet_ids                        = optional(set(string))
     security_group_ids                = optional(set(string))
     tags                              = optional(map(string), { ModuleName = "atlas-aws" })
-    add_vpc_cidr_block_project_access = optional(bool, true)
+    add_vpc_cidr_block_project_access = optional(bool, false)
   })
   default = {
     enabled            = false
