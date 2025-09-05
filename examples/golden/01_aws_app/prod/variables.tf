@@ -1,4 +1,3 @@
-# source/includes/examples/tf-example-variables.rst
 variable "atlas_org_id" {
   type        = string
   description = "Atlas Organization ID"
@@ -48,4 +47,11 @@ variable "tags" {
 variable "log_bucket_name" {
   type        = string
   description = "AWS S3 Bucket Name For Log Export"
+}
+
+# DUMP For APP .env file
+variable "api_mongo_env_path" {
+  type = string
+  description = "Add a path to the api-mongo .env file"
+  default = ""
 }
