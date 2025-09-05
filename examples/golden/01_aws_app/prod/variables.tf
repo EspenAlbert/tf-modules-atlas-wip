@@ -51,7 +51,7 @@ variable "log_bucket_name" {
 
 # DUMP For APP .env file
 variable "api_mongo_env_path" {
-  type = string
+  type        = string
   description = "Add a path to the api-mongo .env file"
-  default = ""
+  default     = ""
 }

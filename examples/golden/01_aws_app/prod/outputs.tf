@@ -43,18 +43,18 @@ output "aws_iam_role_app_arn" {
 
 locals {
   env_vars_api_mongo = {
-    AWS_ACCOUNT_ID = data.aws_caller_identity.current.account_id
-    AWS_REGION = local.aws_region
-    LAMBDA_EXECUTION_ROLE_ARN=aws_iam_role.lambda_exec.arn
-    MONGO_URL = module.atlas_cluster.connection_string_private_endpoint
-    VPC_ID = module.vpc.vpc_id
-    VPC_SUBNET_IDS = join(",", module.vpc.private_subnets)
+    AWS_ACCOUNT_ID            = data.aws_caller_identity.current.account_id
+    AWS_REGION                = local.aws_region
+    LAMBDA_EXECUTION_ROLE_ARN = aws_iam_role.lambda_exec.arn
+    MONGO_URL                 = module.atlas_cluster.connection_string_private_endpoint
+    VPC_ID                    = module.vpc.vpc_id
+    VPC_SUBNET_IDS            = join(",", module.vpc.private_subnets)
   }
 }
 
 resource "local_file" "api_mongo_dot_env" {
   count = var.api_mongo_env_path != "" ? 1 : 0
-  content  = join("\n", [
+  content = join("\n", [
     for key, value in local.env_vars_api_mongo : "${key}=\"${value}\""]
   )
   filename = var.api_mongo_env_path
