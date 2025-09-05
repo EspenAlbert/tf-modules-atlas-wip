@@ -1,0 +1,56 @@
+set dotenv-load
+
+default:
+    just --list
+
+run-local: # needs MONGO_URL to be set
+    uv run uvicorn main:app --host localhost --port 8000
+
+build-lambda:
+    docker build -f Dockerfile_lambda -t api-mongo-lambda:latest .
+
+aws-ecr-login:
+ aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+
+push-lambda tag: build-lambda
+    export repo_url=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY_NAME:=api-mongo-python}:{{tag}} \
+    && echo "Pushing to ${repo_url}" \
+    && docker tag api-mongo-lambda:latest ${repo_url} \
+    && docker push ${repo_url}
+
+tf-vars-auto-ecr:
+  cd tf_ecr \
+  && cat terraform.tfvars.json.template \
+  | jq --arg aws_region "${AWS_REGION}" \
+       --arg ecr_repo "${ECR_REPOSITORY_NAME:=api-mongo-python}" \
+       '.ecr_repos[0] = $ecr_repo | .aws_region = $aws_region' > terraform.auto.tfvars.json
+
+tf-vars-auto-lambda tag:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  # Validate required environment variables
+  export IMAGE_TAG={{tag}}
+  : "${AWS_ACCOUNT_ID?Error: AWS_ACCOUNT_ID is required}"
+  : "${AWS_REGION?Error: AWS_REGION is required}"
+  : "${ECR_REPOSITORY_NAME:=api-mongo-python}"
+  : "${VPC_ID?Error: VPC_ID is required}"
+  : "${VPC_SUBNET_IDS?Error: VPC_SUBNET_IDS is required}"
+  : "${MONGO_URL?Error: MONGO_URL is required}"
+  : "${LAMBDA_EXECUTION_ROLE_ARN?Error: LAMBDA_EXECUTION_ROLE_ARN is required}"
+  cd tf_lambda \
+  && cat terraform.tfvars.json.template \
+  | jq --arg aws_account_id "${AWS_ACCOUNT_ID}" \
+       --arg aws_region "${AWS_REGION}" \
+       --arg ecr_repo "${ECR_REPOSITORY_NAME}" \
+       --arg image_tag "${IMAGE_TAG}" \
+       --arg vpc_id "${VPC_ID}" \
+       --arg vpc_subnet_ids "${VPC_SUBNET_IDS}" \
+       --arg mongo_url "${MONGO_URL}" \
+       --arg lambda_role "${LAMBDA_EXECUTION_ROLE_ARN}" \
+       '.aws_region = $aws_region
+       | .image_uri = "\($aws_account_id).dkr.ecr.\($aws_region).amazonaws.com/\($ecr_repo):\($image_tag)"
+       | .vpc_subnet_ids = ($vpc_subnet_ids | split(","))
+       | .vpc_id = $vpc_id
+       | .env_vars.MONGO_URL = $mongo_url
+       | .lambda_execution_role_arn = $lambda_role' \
+  > terraform.auto.tfvars.json 

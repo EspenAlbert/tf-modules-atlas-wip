@@ -4,10 +4,18 @@ locals {
   subnet_bits  = 3 # 2^3 = 8 subnets, in case more needs to be added
   azs          = slice(data.aws_availability_zones.available.names, 0, local.subnet_count)
   aws_region   = replace(lower(var.atlas_region), "_", "-")
-
+  lambda_policy_arns = {
+    cloudwatch_logs_policy = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+    ecr_pull               = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+    vpc_access             = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+  }
 }
+
 provider "aws" {
   region = local.aws_region
+  default_tags {
+    tags = var.tags
+  }
 }
 
 data "aws_availability_zones" "available" {}
@@ -91,29 +99,25 @@ resource "aws_kms_key" "this" {
   })
 }
 
-resource "aws_iam_role" "app_role" {
 
-  lifecycle {
-    precondition {
-      condition     = var.aws_iam_role_app_name != null
-      error_message = "aws_iam_role_name must be set when existing_aws_iam_role_arn is null"
-    }
-  }
-  name = var.aws_iam_role_app_name
-
-  # TODO: Update the assume role policy to support a lambda or similar to assume the role
+resource "aws_iam_role" "lambda_exec" {
+  name               = var.aws_iam_role_app_name
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Effect": "Allow",
-      "Principal": {
-        "AWS":  "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
-      },
-      "Action": "sts:AssumeRole"
+      "Action": "sts:AssumeRole",
+      "Principal": { "Service": "lambda.amazonaws.com" },
+      "Effect": "Allow"
     }
   ]
 }
 EOF
+}
+resource "aws_iam_role_policy_attachment" "lambda_attachments" {
+  for_each = local.lambda_policy_arns
+
+  policy_arn = each.value
+  role       = aws_iam_role.lambda_exec.name
 }

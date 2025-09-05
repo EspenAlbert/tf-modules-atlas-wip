@@ -1,5 +1,3 @@
-
-
 resource "mongodbatlas_project" "this" {
   is_collect_database_specifics_statistics_enabled = var.is_collect_database_specifics_statistics_enabled
   is_data_explorer_enabled                         = var.is_data_explorer_enabled
@@ -38,4 +36,22 @@ module "ip_access_entry" {
     ip_address = each.value.ip_address
     project_id = mongodbatlas_project.this.id
   }
+}
+
+module "cidr_access_entry" {
+  source   = "./modules/cidr_access_entry"
+  for_each = var.access_cidrs
+
+  comment    = each.value.comment
+  cidr_block = each.value.cidr_block
+  project_id = mongodbatlas_project.this.id
+}
+
+resource "mongodbatlas_auditing" "this" {
+  count = var.auditing_enabled ? 1 : 0
+
+  audit_authorization_success = var.auditing.audit_authorization_success
+  audit_filter                = var.auditing.audit_filter
+  enabled                     = true
+  project_id                  = mongodbatlas_project.this.id
 }

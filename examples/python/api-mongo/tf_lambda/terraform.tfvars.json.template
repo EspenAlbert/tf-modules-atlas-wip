@@ -1,0 +1,12 @@
+{
+  "ecr_repos": ["ECR_REPOSITORY_NAME"],
+  "aws_region": "AWS_REGION",
+  "image_uri": "AWS_ACCOUNT_ID.dkr.ecr.AWS_REGION.amazonaws.com/ECR_REPOSITORY_NAME:IMAGE_TAG",
+  "vpc_subnet_ids": "VPC_SUBNET_IDS",
+  "vpc_id": "VPC_ID",
+  "env_vars": {
+    "MONGO_URL": "MONGO_CONNECTION_STRING",
+    "USE_IAM_AUTH": "true"
+  },
+  "lambda_execution_role_arn": "LAMBDA_EXECUTION_ROLE_ARN"
+}
