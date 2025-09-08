@@ -29,6 +29,7 @@ variable "encryption_at_rest_enabled" {
 variable "on_demand_policy_item" {
   type = list(object({
     frequency_interval = number
+    retention_unit     = string
     retention_value    = number
   }))
   nullable = true
@@ -84,6 +85,7 @@ variable "policy_item_weekly" {
 variable "policy_item_yearly" {
   type = list(object({
     frequency_interval = number
+    retention_unit     = string
     retention_value    = number
   }))
   nullable = true

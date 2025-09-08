@@ -15,4 +15,4 @@ resources:
     - replication_specs
 - name: mongodbatlas_project
   include_id_field: true
-last_gen_sha: 872a56cc5a321f1710b599da4672820a91ca46b6
+last_gen_sha: 75e97a70562f1aecfe7f5abf4ee046f18de1c830

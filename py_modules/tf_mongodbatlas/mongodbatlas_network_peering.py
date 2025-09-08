@@ -6,9 +6,21 @@ from typing import Optional, Set, ClassVar, Union
 
 
 @dataclass
-class Resource:
+class Timeout:
     BLOCK_ATTRIBUTES: ClassVar[Set[str]] = set()
     NESTED_ATTRIBUTES: ClassVar[Set[str]] = set()
+    REQUIRED_ATTRIBUTES: ClassVar[Set[str]] = set()
+    COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = set()
+    DEFAULTS_HCL_STRINGS: ClassVar[dict[str, str]] = {}
+    create: Optional[str] = None
+    delete: Optional[str] = None
+    update: Optional[str] = None
+
+
+@dataclass
+class Resource:
+    BLOCK_ATTRIBUTES: ClassVar[Set[str]] = {"timeouts"}
+    NESTED_ATTRIBUTES: ClassVar[Set[str]] = {"timeouts"}
     REQUIRED_ATTRIBUTES: ClassVar[Set[str]] = {"container_id", "project_id", "provider_name"}
     COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = {
         "atlas_id",
@@ -31,6 +43,7 @@ class Resource:
     azure_subscription_id: Optional[str] = None
     connection_id: Optional[str] = None
     container_id: Optional[str] = None
+    delete_on_create_timeout: Optional[bool] = None
     error_message: Optional[str] = None
     error_state: Optional[str] = None
     error_state_name: Optional[str] = None
@@ -45,6 +58,14 @@ class Resource:
     status_name: Optional[str] = None
     vnet_name: Optional[str] = None
     vpc_id: Optional[str] = None
+    timeouts: Optional[Timeout] = None
+
+    def __post_init__(self):
+        if self.timeouts is not None and not isinstance(self.timeouts, Timeout):
+            assert isinstance(self.timeouts, dict), (
+                f"Expected timeouts to be a Timeout or a dict, got {type(self.timeouts)}"
+            )
+            self.timeouts = Timeout(**self.timeouts)
 
 
 def format_primitive(value: Union[str, float, bool, int, None]):

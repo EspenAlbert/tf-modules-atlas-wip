@@ -22,10 +22,17 @@ class Resource:
     BLOCK_ATTRIBUTES: ClassVar[Set[str]] = {"azure_config"}
     NESTED_ATTRIBUTES: ClassVar[Set[str]] = {"azure_config"}
     REQUIRED_ATTRIBUTES: ClassVar[Set[str]] = {"project_id", "provider_name"}
-    COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = {"aws_config", "created_date", "last_updated_date", "role_id"}
+    COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = {
+        "aws_config",
+        "created_date",
+        "gcp_config",
+        "last_updated_date",
+        "role_id",
+    }
     DEFAULTS_HCL_STRINGS: ClassVar[dict[str, str]] = {}
     aws_config: Optional[Any] = None
     created_date: Optional[str] = None
+    gcp_config: Optional[Any] = None
     last_updated_date: Optional[str] = None
     project_id: Optional[str] = None
     provider_name: Optional[str] = None

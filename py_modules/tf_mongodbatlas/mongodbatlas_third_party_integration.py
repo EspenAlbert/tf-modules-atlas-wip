@@ -23,6 +23,7 @@ class Resource:
     secret: Optional[str] = None
     send_collection_latency_metrics: Optional[bool] = None
     send_database_metrics: Optional[bool] = None
+    send_user_provided_resource_tags: Optional[bool] = None
     service_discovery: Optional[str] = None
     service_key: Optional[str] = None
     team_name: Optional[str] = None

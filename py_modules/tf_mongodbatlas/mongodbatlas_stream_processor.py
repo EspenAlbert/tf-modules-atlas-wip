@@ -33,12 +33,23 @@ class Option:
 
 
 @dataclass
+class Timeout:
+    BLOCK_ATTRIBUTES: ClassVar[Set[str]] = set()
+    NESTED_ATTRIBUTES: ClassVar[Set[str]] = set()
+    REQUIRED_ATTRIBUTES: ClassVar[Set[str]] = set()
+    COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = set()
+    DEFAULTS_HCL_STRINGS: ClassVar[dict[str, str]] = {}
+    create: Optional[str] = None
+
+
+@dataclass
 class Resource:
     BLOCK_ATTRIBUTES: ClassVar[Set[str]] = set()
-    NESTED_ATTRIBUTES: ClassVar[Set[str]] = {"options"}
+    NESTED_ATTRIBUTES: ClassVar[Set[str]] = {"options", "timeouts"}
     REQUIRED_ATTRIBUTES: ClassVar[Set[str]] = {"instance_name", "pipeline", "processor_name", "project_id"}
     COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = {"stats"}
     DEFAULTS_HCL_STRINGS: ClassVar[dict[str, str]] = {}
+    delete_on_create_timeout: Optional[bool] = None
     instance_name: Optional[str] = None
     options: Optional[Option] = None
     pipeline: Optional[str] = None
@@ -46,6 +57,7 @@ class Resource:
     project_id: Optional[str] = None
     state: Optional[str] = None
     stats: Optional[str] = None
+    timeouts: Optional[Timeout] = None
 
     def __post_init__(self):
         if self.options is not None and not isinstance(self.options, Option):
@@ -53,6 +65,11 @@ class Resource:
                 f"Expected options to be a Option or a dict, got {type(self.options)}"
             )
             self.options = Option(**self.options)
+        if self.timeouts is not None and not isinstance(self.timeouts, Timeout):
+            assert isinstance(self.timeouts, dict), (
+                f"Expected timeouts to be a Timeout or a dict, got {type(self.timeouts)}"
+            )
+            self.timeouts = Timeout(**self.timeouts)
 
 
 def format_primitive(value: Union[str, float, bool, int, None]):

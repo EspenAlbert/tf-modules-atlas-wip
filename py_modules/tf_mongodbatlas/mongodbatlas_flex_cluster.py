@@ -40,9 +40,27 @@ class ProviderSetting:
 
 
 @dataclass
+class Timeout:
+    BLOCK_ATTRIBUTES: ClassVar[Set[str]] = set()
+    NESTED_ATTRIBUTES: ClassVar[Set[str]] = set()
+    REQUIRED_ATTRIBUTES: ClassVar[Set[str]] = set()
+    COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = set()
+    DEFAULTS_HCL_STRINGS: ClassVar[dict[str, str]] = {}
+    create: Optional[str] = None
+    delete: Optional[str] = None
+    update: Optional[str] = None
+
+
+@dataclass
 class Resource:
     BLOCK_ATTRIBUTES: ClassVar[Set[str]] = set()
-    NESTED_ATTRIBUTES: ClassVar[Set[str]] = {"backup_settings", "connection_strings", "provider_settings", "tags"}
+    NESTED_ATTRIBUTES: ClassVar[Set[str]] = {
+        "backup_settings",
+        "connection_strings",
+        "provider_settings",
+        "tags",
+        "timeouts",
+    }
     REQUIRED_ATTRIBUTES: ClassVar[Set[str]] = {"name", "project_id", "provider_settings"}
     COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = {
         "backup_settings",
@@ -58,6 +76,7 @@ class Resource:
     cluster_type: Optional[str] = None
     connection_strings: Optional[ConnectionString] = None
     create_date: Optional[str] = None
+    delete_on_create_timeout: Optional[bool] = None
     mongo_db_version: Optional[str] = None
     name: Optional[str] = None
     project_id: Optional[str] = None
@@ -65,6 +84,7 @@ class Resource:
     state_name: Optional[str] = None
     tags: Optional[Dict[str, Any]] = None
     termination_protection_enabled: Optional[bool] = None
+    timeouts: Optional[Timeout] = None
     version_release_system: Optional[str] = None
 
     def __post_init__(self):
@@ -83,6 +103,11 @@ class Resource:
                 f"Expected provider_settings to be a ProviderSetting or a dict, got {type(self.provider_settings)}"
             )
             self.provider_settings = ProviderSetting(**self.provider_settings)
+        if self.timeouts is not None and not isinstance(self.timeouts, Timeout):
+            assert isinstance(self.timeouts, dict), (
+                f"Expected timeouts to be a Timeout or a dict, got {type(self.timeouts)}"
+            )
+            self.timeouts = Timeout(**self.timeouts)
 
 
 def format_primitive(value: Union[str, float, bool, int, None]):

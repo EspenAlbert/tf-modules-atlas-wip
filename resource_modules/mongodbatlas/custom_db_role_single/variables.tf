@@ -2,7 +2,7 @@ variable "mongodbatlas_custom_db_role" {
   type = object({
     project_id = string
     role_name  = string
-    actions = optional(list(object({
+    actions = optional(set(object({
       action = string
       resources = set(object({
         cluster         = optional(bool)

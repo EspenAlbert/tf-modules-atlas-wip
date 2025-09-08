@@ -9,7 +9,7 @@ from typing import Optional, List, Set, ClassVar, Union
 class Resource:
     BLOCK_ATTRIBUTES: ClassVar[Set[str]] = set()
     NESTED_ATTRIBUTES: ClassVar[Set[str]] = {"role_names"}
-    REQUIRED_ATTRIBUTES: ClassVar[Set[str]] = {"description", "name", "org_owner_id", "role_names"}
+    REQUIRED_ATTRIBUTES: ClassVar[Set[str]] = {"name"}
     COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = {"org_id", "private_key", "public_key"}
     DEFAULTS_HCL_STRINGS: ClassVar[dict[str, str]] = {}
     api_access_list_required: Optional[bool] = None

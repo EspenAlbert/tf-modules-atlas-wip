@@ -69,6 +69,16 @@ class Schedule:
 
 
 @dataclass
+class Timeout:
+    BLOCK_ATTRIBUTES: ClassVar[Set[str]] = set()
+    NESTED_ATTRIBUTES: ClassVar[Set[str]] = set()
+    REQUIRED_ATTRIBUTES: ClassVar[Set[str]] = set()
+    COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = set()
+    DEFAULTS_HCL_STRINGS: ClassVar[dict[str, str]] = {}
+    create: Optional[str] = None
+
+
+@dataclass
 class Resource:
     BLOCK_ATTRIBUTES: ClassVar[Set[str]] = {
         "criteria",
@@ -76,6 +86,7 @@ class Resource:
         "data_process_region",
         "partition_fields",
         "schedule",
+        "timeouts",
     }
     NESTED_ATTRIBUTES: ClassVar[Set[str]] = {
         "criteria",
@@ -83,6 +94,7 @@ class Resource:
         "data_process_region",
         "partition_fields",
         "schedule",
+        "timeouts",
     }
     REQUIRED_ATTRIBUTES: ClassVar[Set[str]] = {"cluster_name", "coll_name", "db_name", "project_id", "criteria"}
     COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = {"archive_id", "state"}
@@ -92,6 +104,7 @@ class Resource:
     coll_name: Optional[str] = None
     collection_type: Optional[str] = None
     db_name: Optional[str] = None
+    delete_on_create_timeout: Optional[bool] = None
     paused: Optional[bool] = None
     project_id: Optional[str] = None
     state: Optional[str] = None
@@ -101,6 +114,7 @@ class Resource:
     data_process_region: Optional[List[DataProcessRegion]] = None
     partition_fields: Optional[List[PartitionField]] = None
     schedule: Optional[List[Schedule]] = None
+    timeouts: Optional[Timeout] = None
 
     def __post_init__(self):
         if self.criteria is not None:
@@ -119,6 +133,11 @@ class Resource:
             ]
         if self.schedule is not None:
             self.schedule = [x if isinstance(x, Schedule) else Schedule(**x) for x in self.schedule]
+        if self.timeouts is not None and not isinstance(self.timeouts, Timeout):
+            assert isinstance(self.timeouts, dict), (
+                f"Expected timeouts to be a Timeout or a dict, got {type(self.timeouts)}"
+            )
+            self.timeouts = Timeout(**self.timeouts)
 
 
 def format_primitive(value: Union[str, float, bool, int, None]):

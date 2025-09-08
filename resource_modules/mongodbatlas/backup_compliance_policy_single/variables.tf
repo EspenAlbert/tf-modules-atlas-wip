@@ -10,6 +10,7 @@ variable "mongodbatlas_backup_compliance_policy" {
     restore_window_days        = optional(number)
     on_demand_policy_item = optional(list(object({
       frequency_interval = number
+      retention_unit     = string
       retention_value    = number
     })))
     policy_item_daily = optional(list(object({
@@ -34,6 +35,7 @@ variable "mongodbatlas_backup_compliance_policy" {
     })))
     policy_item_yearly = optional(list(object({
       frequency_interval = number
+      retention_unit     = string
       retention_value    = number
     })))
   })

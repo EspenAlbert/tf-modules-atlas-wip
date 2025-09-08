@@ -47,6 +47,7 @@ class Resource:
     DEFAULTS_HCL_STRINGS: ClassVar[dict[str, str]] = {}
     aws_connection_status: Optional[str] = None
     azure_status: Optional[str] = None
+    delete_on_create_timeout: Optional[bool] = None
     delete_requested: Optional[bool] = None
     endpoint_group_name: Optional[str] = None
     endpoint_service_id: Optional[str] = None

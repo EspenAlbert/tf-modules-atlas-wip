@@ -47,6 +47,12 @@ variable "data_process_region" {
   default  = null
 }
 
+variable "delete_on_create_timeout" {
+  type     = bool
+  nullable = true
+  default  = null
+}
+
 variable "partition_fields" {
   type = list(object({
     field_name = string
@@ -78,6 +84,14 @@ variable "schedule" {
 
 variable "sync_creation" {
   type     = bool
+  nullable = true
+  default  = null
+}
+
+variable "timeouts" {
+  type = object({
+    create = optional(string)
+  })
   nullable = true
   default  = null
 }

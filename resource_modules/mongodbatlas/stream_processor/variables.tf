@@ -14,6 +14,12 @@ variable "project_id" {
   type = string
 }
 
+variable "delete_on_create_timeout" {
+  type     = bool
+  nullable = true
+  default  = null
+}
+
 variable "options" {
   type = object({
     dlq = object({
@@ -28,6 +34,14 @@ variable "options" {
 
 variable "state" {
   type     = string
+  nullable = true
+  default  = null
+}
+
+variable "timeouts" {
+  type = object({
+    create = optional(string)
+  })
   nullable = true
   default  = null
 }

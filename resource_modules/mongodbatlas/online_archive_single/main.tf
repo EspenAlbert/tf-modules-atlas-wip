@@ -27,7 +27,8 @@ resource "mongodbatlas_online_archive" "this" {
       region         = data_process_region.value.region
     }
   }
-  db_name = var.mongodbatlas_online_archive.db_name
+  db_name                  = var.mongodbatlas_online_archive.db_name
+  delete_on_create_timeout = var.mongodbatlas_online_archive.delete_on_create_timeout
   dynamic "partition_fields" {
     for_each = var.mongodbatlas_online_archive.partition_fields == null ? [] : var.mongodbatlas_online_archive.partition_fields
     content {
@@ -50,5 +51,11 @@ resource "mongodbatlas_online_archive" "this" {
     }
   }
   sync_creation = var.mongodbatlas_online_archive.sync_creation
+  dynamic "timeouts" {
+    for_each = var.mongodbatlas_online_archive.timeouts == null ? [] : [var.mongodbatlas_online_archive.timeouts]
+    content {
+      create = timeouts.value.create
+    }
+  }
 }
 

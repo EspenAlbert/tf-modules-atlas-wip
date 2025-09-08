@@ -26,6 +26,7 @@ class Resource:
     DEFAULTS_HCL_STRINGS: ClassVar[dict[str, str]] = {}
     bucket_name: Optional[str] = None
     create_date: Optional[str] = None
+    delete_on_create_timeout: Optional[bool] = None
     iam_role_id: Optional[str] = None
     prefix_path: Optional[str] = None
     project_id: Optional[str] = None

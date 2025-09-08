@@ -32,10 +32,11 @@ class Resource:
     BLOCK_ATTRIBUTES: ClassVar[Set[str]] = {"aws", "azure"}
     NESTED_ATTRIBUTES: ClassVar[Set[str]] = {"aws", "azure"}
     REQUIRED_ATTRIBUTES: ClassVar[Set[str]] = {"project_id", "role_id"}
-    COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = {"authorized_date", "feature_usages"}
+    COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = {"authorized_date", "feature_usages", "gcp"}
     DEFAULTS_HCL_STRINGS: ClassVar[dict[str, str]] = {}
     authorized_date: Optional[str] = None
     feature_usages: Optional[Any] = None
+    gcp: Optional[Any] = None
     project_id: Optional[str] = None
     role_id: Optional[str] = None
     aws: Optional[List[Aws]] = None

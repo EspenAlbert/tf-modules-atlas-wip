@@ -43,6 +43,7 @@ variable "google_cloud_kms_config" {
   type = list(object({
     enabled                 = optional(bool)
     key_version_resource_id = optional(string)
+    role_id                 = optional(string)
     service_account_key     = optional(string)
   }))
   nullable = true

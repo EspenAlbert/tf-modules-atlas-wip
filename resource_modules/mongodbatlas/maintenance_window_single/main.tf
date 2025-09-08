@@ -14,6 +14,5 @@ resource "mongodbatlas_maintenance_window" "this" {
       start_hour_of_day = protected_hours.value.start_hour_of_day
     }
   }
-  start_asap = var.mongodbatlas_maintenance_window.start_asap
 }
 

@@ -24,6 +24,7 @@ class Timeout:
     REQUIRED_ATTRIBUTES: ClassVar[Set[str]] = set()
     COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = set()
     DEFAULTS_HCL_STRINGS: ClassVar[dict[str, str]] = {}
+    create: Optional[str] = None
     delete: Optional[str] = None
 
 
@@ -35,6 +36,7 @@ class Resource:
     COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = {"simulation_id", "start_request_date", "state"}
     DEFAULTS_HCL_STRINGS: ClassVar[dict[str, str]] = {}
     cluster_name: Optional[str] = None
+    delete_on_create_timeout: Optional[bool] = None
     project_id: Optional[str] = None
     simulation_id: Optional[str] = None
     start_request_date: Optional[str] = None

@@ -34,6 +34,7 @@ resource "mongodbatlas_encryption_at_rest" "this" {
     content {
       enabled                 = google_cloud_kms_config.value.enabled
       key_version_resource_id = google_cloud_kms_config.value.key_version_resource_id
+      role_id                 = google_cloud_kms_config.value.role_id
       service_account_key     = google_cloud_kms_config.value.service_account_key
     }
   }

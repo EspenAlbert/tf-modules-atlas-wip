@@ -41,6 +41,7 @@ class Resource:
         "status",
     }
     DEFAULTS_HCL_STRINGS: ClassVar[dict[str, str]] = {}
+    delete_on_create_timeout: Optional[bool] = None
     endpoint_group_names: Optional[List[str]] = None
     endpoint_service_name: Optional[str] = None
     error_message: Optional[str] = None

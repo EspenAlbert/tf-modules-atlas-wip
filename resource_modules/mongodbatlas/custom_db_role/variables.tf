@@ -7,7 +7,7 @@ variable "role_name" {
 }
 
 variable "actions" {
-  type = list(object({
+  type = set(object({
     action = string
     resources = set(object({
       cluster         = optional(bool)

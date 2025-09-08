@@ -26,6 +26,7 @@ variable "mongodbatlas_encryption_at_rest" {
     google_cloud_kms_config = optional(list(object({
       enabled                 = optional(bool)
       key_version_resource_id = optional(string)
+      role_id                 = optional(string)
       service_account_key     = optional(string)
     })))
   })

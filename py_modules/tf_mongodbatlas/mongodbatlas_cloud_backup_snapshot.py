@@ -39,6 +39,7 @@ class Resource:
     cloud_provider: Optional[str] = None
     cluster_name: Optional[str] = None
     created_at: Optional[str] = None
+    delete_on_create_timeout: Optional[bool] = None
     description: Optional[str] = None
     expires_at: Optional[str] = None
     master_key_uuid: Optional[str] = None

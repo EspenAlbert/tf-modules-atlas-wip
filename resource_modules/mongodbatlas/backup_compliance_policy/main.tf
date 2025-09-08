@@ -10,6 +10,7 @@ resource "mongodbatlas_backup_compliance_policy" "this" {
     for_each = var.on_demand_policy_item == null ? [] : var.on_demand_policy_item
     content {
       frequency_interval = on_demand_policy_item.value.frequency_interval
+      retention_unit     = on_demand_policy_item.value.retention_unit
       retention_value    = on_demand_policy_item.value.retention_value
     }
   }
@@ -50,6 +51,7 @@ resource "mongodbatlas_backup_compliance_policy" "this" {
     for_each = var.policy_item_yearly == null ? [] : var.policy_item_yearly
     content {
       frequency_interval = policy_item_yearly.value.frequency_interval
+      retention_unit     = policy_item_yearly.value.retention_unit
       retention_value    = policy_item_yearly.value.retention_value
     }
   }

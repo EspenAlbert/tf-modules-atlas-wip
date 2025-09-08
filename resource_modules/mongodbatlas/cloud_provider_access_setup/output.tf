@@ -6,6 +6,10 @@ output "created_date" {
   value = mongodbatlas_cloud_provider_access_setup.this.created_date
 }
 
+output "gcp_config" {
+  value = mongodbatlas_cloud_provider_access_setup.this.gcp_config
+}
+
 output "last_updated_date" {
   value = mongodbatlas_cloud_provider_access_setup.this.last_updated_date
 }

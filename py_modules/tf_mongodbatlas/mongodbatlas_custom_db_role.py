@@ -2,7 +2,7 @@
 import json
 import sys
 from dataclasses import asdict, dataclass
-from typing import Optional, List, Set, ClassVar, Union
+from typing import Optional, Set, ClassVar, Union
 
 
 @dataclass
@@ -55,12 +55,15 @@ class Resource:
     DEFAULTS_HCL_STRINGS: ClassVar[dict[str, str]] = {}
     project_id: Optional[str] = None
     role_name: Optional[str] = None
-    actions: Optional[List[Action]] = None
+    actions: Optional[Set[Action]] = None
     inherited_roles: Optional[Set[InheritedRole]] = None
 
     def __post_init__(self):
-        if self.actions is not None:
-            self.actions = [x if isinstance(x, Action) else Action(**x) for x in self.actions]
+        if self.actions is not None and not isinstance(self.actions, Action):
+            assert isinstance(self.actions, dict), (
+                f"Expected actions to be a Action or a dict, got {type(self.actions)}"
+            )
+            self.actions = Action(**self.actions)
         if self.inherited_roles is not None and not isinstance(self.inherited_roles, InheritedRole):
             assert isinstance(self.inherited_roles, dict), (
                 f"Expected inherited_roles to be a InheritedRole or a dict, got {type(self.inherited_roles)}"

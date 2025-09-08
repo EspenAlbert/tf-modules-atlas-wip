@@ -51,6 +51,7 @@ class GoogleCloudKmsConfig:
     DEFAULTS_HCL_STRINGS: ClassVar[dict[str, str]] = {}
     enabled: Optional[bool] = None
     key_version_resource_id: Optional[str] = None
+    role_id: Optional[str] = None
     service_account_key: Optional[str] = None
     valid: Optional[bool] = None
 

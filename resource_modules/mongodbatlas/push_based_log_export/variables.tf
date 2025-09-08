@@ -10,6 +10,12 @@ variable "project_id" {
   type = string
 }
 
+variable "delete_on_create_timeout" {
+  type     = bool
+  nullable = true
+  default  = null
+}
+
 variable "prefix_path" {
   type     = string
   nullable = true

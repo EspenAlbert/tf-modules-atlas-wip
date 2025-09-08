@@ -1,12 +1,13 @@
 variable "mongodbatlas_online_archive" {
   type = object({
-    cluster_name    = string
-    coll_name       = string
-    collection_type = optional(string)
-    db_name         = string
-    paused          = optional(bool)
-    project_id      = string
-    sync_creation   = optional(bool)
+    cluster_name             = string
+    coll_name                = string
+    collection_type          = optional(string)
+    db_name                  = string
+    delete_on_create_timeout = optional(bool)
+    paused                   = optional(bool)
+    project_id               = string
+    sync_creation            = optional(bool)
     criteria = list(object({
       date_field        = optional(string)
       date_format       = optional(string)
@@ -34,5 +35,8 @@ variable "mongodbatlas_online_archive" {
       start_minute = optional(number)
       type         = string
     })))
+    timeouts = optional(object({
+      create = optional(string)
+    }))
   })
 }

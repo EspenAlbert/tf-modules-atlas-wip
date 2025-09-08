@@ -20,8 +20,8 @@ class ProtectedHour:
 class Resource:
     BLOCK_ATTRIBUTES: ClassVar[Set[str]] = {"protected_hours"}
     NESTED_ATTRIBUTES: ClassVar[Set[str]] = {"protected_hours"}
-    REQUIRED_ATTRIBUTES: ClassVar[Set[str]] = {"day_of_week", "project_id"}
-    COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = {"number_of_deferrals", "time_zone_id"}
+    REQUIRED_ATTRIBUTES: ClassVar[Set[str]] = {"day_of_week", "hour_of_day", "project_id"}
+    COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = {"number_of_deferrals", "start_asap", "time_zone_id"}
     DEFAULTS_HCL_STRINGS: ClassVar[dict[str, str]] = {}
     auto_defer: Optional[bool] = None
     auto_defer_once_enabled: Optional[bool] = None

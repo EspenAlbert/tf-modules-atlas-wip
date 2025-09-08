@@ -1,7 +1,8 @@
 
 
 resource "mongodbatlas_privatelink_endpoint_service" "this" {
-  endpoint_service_id = var.mongodbatlas_privatelink_endpoint_service.endpoint_service_id
+  delete_on_create_timeout = var.mongodbatlas_privatelink_endpoint_service.delete_on_create_timeout
+  endpoint_service_id      = var.mongodbatlas_privatelink_endpoint_service.endpoint_service_id
   dynamic "endpoints" {
     for_each = var.mongodbatlas_privatelink_endpoint_service.endpoints == null ? [] : var.mongodbatlas_privatelink_endpoint_service.endpoints
     content {

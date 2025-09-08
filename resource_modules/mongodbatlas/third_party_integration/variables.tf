@@ -66,6 +66,12 @@ variable "send_database_metrics" {
   default  = null
 }
 
+variable "send_user_provided_resource_tags" {
+  type     = bool
+  nullable = true
+  default  = null
+}
+
 variable "service_discovery" {
   type     = string
   nullable = true

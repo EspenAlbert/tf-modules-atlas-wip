@@ -9,19 +9,6 @@ from typing import Optional, List, Set, ClassVar, Union
 class Policyitem:
     BLOCK_ATTRIBUTES: ClassVar[Set[str]] = set()
     NESTED_ATTRIBUTES: ClassVar[Set[str]] = set()
-    REQUIRED_ATTRIBUTES: ClassVar[Set[str]] = {"frequency_interval", "retention_value"}
-    COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = {"frequency_type", "retention_unit"}
-    DEFAULTS_HCL_STRINGS: ClassVar[dict[str, str]] = {}
-    frequency_interval: Optional[float] = None
-    frequency_type: Optional[str] = None
-    retention_unit: Optional[str] = None
-    retention_value: Optional[float] = None
-
-
-@dataclass
-class Policyitem2:
-    BLOCK_ATTRIBUTES: ClassVar[Set[str]] = set()
-    NESTED_ATTRIBUTES: ClassVar[Set[str]] = set()
     REQUIRED_ATTRIBUTES: ClassVar[Set[str]] = {"frequency_interval", "retention_unit", "retention_value"}
     COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = {"frequency_type"}
     DEFAULTS_HCL_STRINGS: ClassVar[dict[str, str]] = {}
@@ -69,10 +56,10 @@ class Resource:
     updated_date: Optional[str] = None
     updated_user: Optional[str] = None
     on_demand_policy_item: Optional[List[Policyitem]] = None
-    policy_item_daily: Optional[List[Policyitem2]] = None
-    policy_item_hourly: Optional[List[Policyitem2]] = None
-    policy_item_monthly: Optional[List[Policyitem2]] = None
-    policy_item_weekly: Optional[List[Policyitem2]] = None
+    policy_item_daily: Optional[List[Policyitem]] = None
+    policy_item_hourly: Optional[List[Policyitem]] = None
+    policy_item_monthly: Optional[List[Policyitem]] = None
+    policy_item_weekly: Optional[List[Policyitem]] = None
     policy_item_yearly: Optional[List[Policyitem]] = None
 
     def __post_init__(self):
@@ -82,19 +69,19 @@ class Resource:
             ]
         if self.policy_item_daily is not None:
             self.policy_item_daily = [
-                x if isinstance(x, Policyitem2) else Policyitem2(**x) for x in self.policy_item_daily
+                x if isinstance(x, Policyitem) else Policyitem(**x) for x in self.policy_item_daily
             ]
         if self.policy_item_hourly is not None:
             self.policy_item_hourly = [
-                x if isinstance(x, Policyitem2) else Policyitem2(**x) for x in self.policy_item_hourly
+                x if isinstance(x, Policyitem) else Policyitem(**x) for x in self.policy_item_hourly
             ]
         if self.policy_item_monthly is not None:
             self.policy_item_monthly = [
-                x if isinstance(x, Policyitem2) else Policyitem2(**x) for x in self.policy_item_monthly
+                x if isinstance(x, Policyitem) else Policyitem(**x) for x in self.policy_item_monthly
             ]
         if self.policy_item_weekly is not None:
             self.policy_item_weekly = [
-                x if isinstance(x, Policyitem2) else Policyitem2(**x) for x in self.policy_item_weekly
+                x if isinstance(x, Policyitem) else Policyitem(**x) for x in self.policy_item_weekly
             ]
         if self.policy_item_yearly is not None:
             self.policy_item_yearly = [

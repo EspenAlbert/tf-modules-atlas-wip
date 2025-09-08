@@ -6,18 +6,38 @@ from typing import Optional, Set, ClassVar, Union
 
 
 @dataclass
-class Resource:
+class Timeout:
     BLOCK_ATTRIBUTES: ClassVar[Set[str]] = set()
     NESTED_ATTRIBUTES: ClassVar[Set[str]] = set()
+    REQUIRED_ATTRIBUTES: ClassVar[Set[str]] = set()
+    COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = set()
+    DEFAULTS_HCL_STRINGS: ClassVar[dict[str, str]] = {}
+    create: Optional[str] = None
+    delete: Optional[str] = None
+
+
+@dataclass
+class Resource:
+    BLOCK_ATTRIBUTES: ClassVar[Set[str]] = set()
+    NESTED_ATTRIBUTES: ClassVar[Set[str]] = {"timeouts"}
     REQUIRED_ATTRIBUTES: ClassVar[Set[str]] = {"cloud_provider", "project_id", "region_name"}
     COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = {"error_message", "private_endpoint_connection_name", "status"}
     DEFAULTS_HCL_STRINGS: ClassVar[dict[str, str]] = {}
     cloud_provider: Optional[str] = None
+    delete_on_create_timeout: Optional[bool] = None
     error_message: Optional[str] = None
     private_endpoint_connection_name: Optional[str] = None
     project_id: Optional[str] = None
     region_name: Optional[str] = None
     status: Optional[str] = None
+    timeouts: Optional[Timeout] = None
+
+    def __post_init__(self):
+        if self.timeouts is not None and not isinstance(self.timeouts, Timeout):
+            assert isinstance(self.timeouts, dict), (
+                f"Expected timeouts to be a Timeout or a dict, got {type(self.timeouts)}"
+            )
+            self.timeouts = Timeout(**self.timeouts)
 
 
 def format_primitive(value: Union[str, float, bool, int, None]):

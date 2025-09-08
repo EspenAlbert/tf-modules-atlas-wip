@@ -5,7 +5,3 @@ variable "name" {
 variable "org_id" {
   type = string
 }
-
-variable "usernames" {
-  type = list(string)
-}

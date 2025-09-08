@@ -1,6 +1,7 @@
 variable "mongodbatlas_stream_processor" {
   type = object({
-    instance_name = string
+    delete_on_create_timeout = optional(bool)
+    instance_name            = string
     options = optional(object({
       dlq = object({
         coll            = string
@@ -12,5 +13,8 @@ variable "mongodbatlas_stream_processor" {
     processor_name = string
     project_id     = string
     state          = optional(string)
+    timeouts = optional(object({
+      create = optional(string)
+    }))
   })
 }

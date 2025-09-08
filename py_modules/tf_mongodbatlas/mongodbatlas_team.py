@@ -2,20 +2,19 @@
 import json
 import sys
 from dataclasses import asdict, dataclass
-from typing import Optional, List, Set, ClassVar, Union
+from typing import Optional, Set, ClassVar, Union
 
 
 @dataclass
 class Resource:
     BLOCK_ATTRIBUTES: ClassVar[Set[str]] = set()
-    NESTED_ATTRIBUTES: ClassVar[Set[str]] = {"usernames"}
-    REQUIRED_ATTRIBUTES: ClassVar[Set[str]] = {"name", "org_id", "usernames"}
+    NESTED_ATTRIBUTES: ClassVar[Set[str]] = set()
+    REQUIRED_ATTRIBUTES: ClassVar[Set[str]] = {"name", "org_id"}
     COMPUTED_ONLY_ATTRIBUTES: ClassVar[Set[str]] = {"team_id"}
     DEFAULTS_HCL_STRINGS: ClassVar[dict[str, str]] = {}
     name: Optional[str] = None
     org_id: Optional[str] = None
     team_id: Optional[str] = None
-    usernames: Optional[List[str]] = None
 
 
 def format_primitive(value: Union[str, float, bool, int, None]):

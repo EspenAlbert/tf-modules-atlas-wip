@@ -27,7 +27,8 @@ resource "mongodbatlas_online_archive" "this" {
       region         = data_process_region.value.region
     }
   }
-  db_name = var.db_name
+  db_name                  = var.db_name
+  delete_on_create_timeout = var.delete_on_create_timeout
   dynamic "partition_fields" {
     for_each = var.partition_fields == null ? [] : var.partition_fields
     content {
@@ -50,5 +51,11 @@ resource "mongodbatlas_online_archive" "this" {
     }
   }
   sync_creation = var.sync_creation
+  dynamic "timeouts" {
+    for_each = var.timeouts == null ? [] : [var.timeouts]
+    content {
+      create = timeouts.value.create
+    }
+  }
 }
 
