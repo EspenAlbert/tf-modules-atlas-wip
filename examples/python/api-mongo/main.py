@@ -41,7 +41,7 @@ class Settings(BaseSettings):
 settings = Settings()
 
 
-def get_mongodb_client():
+def get_mongodb_client() -> MongoClient:
     """Create MongoDB client with or without IAM authentication"""
     if settings.use_iam_auth and os.getenv("AWS_EXECUTION_ENV"):
         # Running in AWS Lambda, use IAM authentication
@@ -89,7 +89,7 @@ def health_check(request: Request, path: str = "") -> dict:
         format="%(levelname)-7s %(threadName)-s %(name)-s %(lineno)-s %(message)-s",
         force=True,
     )
-    logger.info(f"sample for {request.url}")
+    logger.info(f"health check for {request.url}")
     client = get_mongodb_client()
     db_ok = False
     error_msg = ""

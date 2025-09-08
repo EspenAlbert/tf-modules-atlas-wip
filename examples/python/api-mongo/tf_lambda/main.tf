@@ -38,7 +38,7 @@ resource "aws_lambda_function" "app" {
   role          = var.lambda_execution_role_arn
   image_uri     = var.image_uri
   architectures = ["arm64"]
-  timeout       = 30 # adjust as needed
+  timeout       = 30
   memory_size   = 512
 
   environment {
