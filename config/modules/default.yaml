@@ -1,0 +1,68 @@
+modules:
+- name: project
+  root_resource_types:
+  - mongodbatlas_project
+  force_skip_parents:
+  - mongodbatlas_team
+  force_edges:
+  - mongodbatlas_project:mongodbatlas_auditing
+  force_skip_children:
+  - mongodbatlas_api_key_project_assignment
+  - mongodbatlas_cloud_backup_schedule
+  - mongodbatlas_database_user
+  - mongodbatlas_encryption_at_rest
+  - mongodbatlas_ldap_configuration
+  - mongodbatlas_ldap_verify
+  - mongodbatlas_network_peering
+  - mongodbatlas_privatelink_endpoint_service_data_federation_online_archive
+  - mongodbatlas_push_based_log_export
+  - mongodbatlas_search_deployment
+  - mongodbatlas_stream_instance
+  - mongodbatlas_team_project_assignment
+  - mongodbatlas_third_party_integration
+- name: cluster
+  root_resource_types:
+  - mongodbatlas_advanced_cluster
+  force_skip_parents:
+  - mongodbatlas_encryption_at_rest
+  force_skip_children:
+  - mongodbatlas_cluster_outage_simulation
+  - mongodbatlas_federated_database_instance
+  - mongodbatlas_ldap_verify
+- name: atlas-aws
+  root_resource_types:
+  - mongodbatlas_cloud_provider_access_setup
+  - mongodbatlas_cloud_provider_access_authorization
+  explore_resource_types:
+  # - aws_vpc_endpoint
+  - mongodbatlas_cloud_backup_snapshot_export_bucket
+  - mongodbatlas_encryption_at_rest
+  # - mongodbatlas_privatelink_endpoint
+  - mongodbatlas_push_based_log_export
+  included_providers:
+  - aws
+  - mongodbatlas
+  # force_edges:
+  # - aws_s3_bucket:mongodbatlas_cloud_backup_snapshot_export_bucket
+  # - aws_s3_bucket:mongodbatlas_push_based_log_export
+- name: auth-db
+  root_resource_types:
+  - mongodbatlas_database_user
+  - mongodbatlas_custom_db_role
+- name: auth-atlas
+  root_resource_types:
+  - mongodbatlas_team
+  - mongodbatlas_api_key_project_assignment
+  - mongodbatlas_cloud_user_org_assignment
+  - mongodbatlas_cloud_user_project_assignment
+  - mongodbatlas_cloud_user_team_assignment
+  - mongodbatlas_team_project_assignment
+- name: org
+  root_resource_types:
+  - mongodbatlas_org
+- name: third-party-integrations
+  root_resource_types:
+  - mongodbatlas_third_party_integration
+- name: alerts
+  root_resource_types:
+  - mongodbatlas_alert_configuration

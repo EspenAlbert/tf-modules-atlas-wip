@@ -55,11 +55,13 @@ module "atlas_cluster" {
     compute_scale_down_enabled = true
     disk_gb_enabled            = true
   }
-  regions = [{
+  regions = [
+    {
     name          = var.atlas_region
     provider_name = "AWS"
     node_count    = 3
-  }]
+  }
+  ]
   encryption_at_rest_provider = "AWS"
 
   depends_on = [module.atlas_aws]

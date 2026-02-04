@@ -37,6 +37,21 @@ fmt:
   terraform fmt -recursive ./modules
 
 [positional-arguments]
+resource-usage *args:
+  export STATIC_DIR="{{justfile_directory()}}/static"; \
+  export CACHE_DIR="{{justfile_directory()}}/cache"; \
+  export REPO_OUT_PATH="{{justfile_directory()}}"; \
+  uv run tf-ext resource-usage --all-examples --with-full-example {{args}}
+
+[positional-arguments]
+module-grouping config *args:
+  export STATIC_DIR="{{justfile_directory()}}/static"; \
+  export CACHE_DIR="{{justfile_directory()}}/cache"; \
+  export REPO_OUT_PATH="{{justfile_directory()}}"; \
+  uv run tf-ext module-grouping -c {{config}} {{args}}
+
+
+[positional-arguments]
 example-readme *args:
   export STATIC_DIR="{{justfile_directory()}}/static"; \
   export CACHE_DIR="{{justfile_directory()}}/cache"; \
